@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import MagneticLink from '../react/MagneticLink';
+import { site } from '../data/site';
+---
+
+<Base title="CV" description={`${site.name}'s CV. Cloud & DevOps Engineering.`}>
+  <section class="mx-auto max-w-6xl px-6 pb-20 pt-32">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="text-muted text-xs font-bold uppercase tracking-widest">Curriculum vitae</p>
+        <h1 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-6xl">
+          CV
+        </h1>
+      </div>
+      <MagneticLink client:load href={site.cvPath} variant="solid" download>
+        Download PDF
+      </MagneticLink>
+    </div>
+
+    <!-- Embedded viewer; the actual PDF lives at public/cv.pdf -->
+    <object
+      data={site.cvPath}
+      type="application/pdf"
+      class="border-line mt-10 h-[80vh] w-full border"
+      aria-label={`${site.name}'s CV in PDF`}
+    >
+      <div class="border-line flex h-full flex-col items-center justify-center gap-4 border p-10 text-center">
+        <p class="text-muted max-w-md leading-relaxed">
+          Your browser can't display the embedded PDF. Download it directly:
+        </p>
+        <a href={site.cvPath} download class="link-reveal text-sm font-bold uppercase tracking-widest">
+          Download CV →
+        </a>
+      </div>
+    </object>
+  </section>
+</Base>

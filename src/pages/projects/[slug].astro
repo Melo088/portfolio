@@ -1,0 +1,98 @@
+---
+import Base from '../../layouts/Base.astro';
+import MagneticLink from '../../react/MagneticLink';
+import BlurReveal from '../../react/BlurReveal';
+import { projects } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const index = projects.findIndex((p) => p.slug === project.slug);
+const prev = projects[(index - 1 + projects.length) % projects.length];
+const next = projects[(index + 1) % projects.length];
+const number = String(index + 1).padStart(2, '0');
+---
+
+<Base title={project.shortTitle} description={project.summary}>
+  <article class="mx-auto max-w-6xl px-6 pb-20 pt-32">
+    <a href="/#projects" class="link-reveal text-muted text-xs font-bold uppercase tracking-widest">
+      ← All projects
+    </a>
+
+    <header class="mt-10">
+      <p class="text-muted text-xs font-bold tracking-widest">{number} · {project.year}</p>
+      <h1 class="text-condensed mt-4 max-w-4xl text-4xl font-black uppercase leading-none md:text-6xl">
+        <BlurReveal client:load text={project.title} step={30} />
+      </h1>
+      <p class="text-muted mt-6 max-w-2xl text-lg leading-relaxed">{project.summary}</p>
+    </header>
+
+    <!-- Project image: replace the placeholder in public/images/projects/ -->
+    <img
+      src={project.image}
+      alt={`${project.shortTitle} project image`}
+      width="1600"
+      height="900"
+      class="border-line mt-12 aspect-video w-full border object-cover grayscale"
+    />
+
+    <div class="mt-16 grid gap-12 md:grid-cols-[2fr_1fr]">
+      <div>
+        <h2 class="text-condensed text-xl font-black uppercase">The project</h2>
+        <div class="mt-6 space-y-5">
+          {project.description.map((p) => <p class="text-muted leading-relaxed">{p}</p>)}
+        </div>
+
+        <h2 class="text-condensed mt-12 text-xl font-black uppercase">Highlights</h2>
+        <ul class="mt-6 space-y-3">
+          {
+            project.highlights.map((h) => (
+              <li class="flex gap-3 leading-relaxed">
+                <span class="text-muted select-none" aria-hidden="true">
+                  &ndash;
+                </span>
+                {h}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <aside>
+        <h2 class="text-muted text-xs font-bold uppercase tracking-widest">Stack</h2>
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {
+            project.stack.map((tech) => (
+              <li class="border-line border px-3 py-1.5 text-xs font-bold uppercase tracking-wider">
+                {tech}
+              </li>
+            ))
+          }
+        </ul>
+        {
+          project.repo && (
+            <div class="mt-8">
+              <MagneticLink client:visible href={project.repo} external>
+                View repository
+              </MagneticLink>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+
+    <nav class="border-line mt-20 flex items-center justify-between border-t pt-8" aria-label="Other projects">
+      <a href={`/projects/${prev.slug}`} class="link-reveal text-sm font-bold uppercase tracking-widest">
+        ← {prev.shortTitle}
+      </a>
+      <a href={`/projects/${next.slug}`} class="link-reveal text-right text-sm font-bold uppercase tracking-widest">
+        {next.shortTitle} →
+      </a>
+    </nav>
+  </article>
+</Base>

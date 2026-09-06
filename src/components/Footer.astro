@@ -1,0 +1,32 @@
+---
+import { site } from '../data/site';
+import MagneticLink from '../react/MagneticLink';
+
+const year = new Date().getFullYear();
+---
+
+<footer id="contacto" class="border-line border-t">
+  <div class="mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <p class="text-muted text-xs font-bold uppercase tracking-widest">Contact</p>
+    <h2 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-7xl">
+      Let's build something
+    </h2>
+    <div class="mt-10 flex flex-wrap items-center gap-4">
+      <MagneticLink client:visible href={`mailto:${site.email}`} variant="solid">
+        {site.email}
+      </MagneticLink>
+      <MagneticLink client:visible href={site.github} external>
+        GitHub
+      </MagneticLink>
+      <MagneticLink client:visible href={site.linkedin} external>
+        LinkedIn
+      </MagneticLink>
+    </div>
+    <div
+      class="text-muted mt-16 flex flex-col gap-2 text-xs uppercase tracking-widest md:flex-row md:items-center md:justify-between"
+    >
+      <p>© {year} {site.name}</p>
+      <p>Cali, Colombia · {site.education.degree}, class of {site.education.graduation}</p>
+    </div>
+  </div>
+</footer>

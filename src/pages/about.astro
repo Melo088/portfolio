@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import MagneticLink from '../react/MagneticLink';
+import BlurReveal from '../react/BlurReveal';
+import { site, skillGroups, certifications } from '../data/site';
+---
+
+<Base title="About" description={site.bio}>
+  <section class="mx-auto max-w-6xl px-6 pb-20 pt-32">
+    <p class="text-muted text-xs font-bold uppercase tracking-widest">About</p>
+    <h1 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-6xl">
+      <BlurReveal client:load text={site.name} />
+    </h1>
+
+    <div class="mt-12 grid gap-12 md:grid-cols-[1fr_1.6fr]">
+      <!-- Photo slot: replace public/images/portrait-placeholder.svg -->
+      <figure class="border-line border">
+        <img
+          src={site.portrait}
+          alt={`Portrait of ${site.name}`}
+          width="800"
+          height="1000"
+          class="aspect-[4/5] w-full object-cover grayscale"
+        />
+      </figure>
+
+      <div>
+        <p class="text-lg leading-relaxed md:text-xl">{site.bio}</p>
+
+        <dl class="border-line mt-10 grid grid-cols-1 gap-6 border-t pt-8 sm:grid-cols-2">
+          <div>
+            <dt class="text-muted text-xs font-bold uppercase tracking-widest">Education</dt>
+            <dd class="mt-2 leading-relaxed">
+              {site.education.degree}<br />
+              {site.education.school}<br />
+              Class of {site.education.graduation}
+            </dd>
+          </div>
+          <div>
+            <dt class="text-muted text-xs font-bold uppercase tracking-widest">Contact</dt>
+            <dd class="mt-2 space-y-1">
+              <a href={`mailto:${site.email}`} class="link-reveal block w-fit">{site.email}</a>
+              <a href={site.github} target="_blank" rel="noopener noreferrer" class="link-reveal block w-fit">
+                github.com/{site.githubHandle.toLowerCase()}
+              </a>
+              <a href={site.linkedin} target="_blank" rel="noopener noreferrer" class="link-reveal block w-fit">
+                LinkedIn
+              </a>
+            </dd>
+          </div>
+        </dl>
+
+        <div class="mt-10 flex flex-wrap gap-4">
+          <MagneticLink client:visible href="/cv" variant="solid">View CV</MagneticLink>
+          <MagneticLink client:visible href={site.cvPath} download>Download PDF</MagneticLink>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="border-line mt-20 border-t pt-16">
+      <h2 class="text-condensed text-3xl font-black uppercase md:text-4xl">Stack & skills</h2>
+      <div class="mt-10 grid gap-10 md:grid-cols-2">
+        {
+          skillGroups.map((group) => (
+            <div>
+              <h3 class="text-muted text-xs font-bold uppercase tracking-widest">{group.label}</h3>
+              <ul class="mt-4 flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <li class="border-line border px-3 py-1.5 text-xs font-bold uppercase tracking-wider">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="border-line mt-16 border-t pt-16">
+      <h2 class="text-condensed text-3xl font-black uppercase md:text-4xl">Certifications</h2>
+      <ul class="mt-8 space-y-3">
+        {
+          certifications.map((cert) => (
+            <li class="flex gap-3 leading-relaxed">
+              <span class="text-muted select-none" aria-hidden="true">
+                &ndash;
+              </span>
+              {cert}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
