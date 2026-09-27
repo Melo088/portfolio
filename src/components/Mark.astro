@@ -3,11 +3,11 @@
  * The "m" mark: Archivo at 900 weight, 125% width, italic, with an extra
  * forward shear, printed in ink.
  *
- * The ink is baked, not filtered live. iOS Safari paints an opaque black
- * box over an feTurbulence SVG filter inside a fixed layer (the nav), so
- * the bleed was rendered once into two alpha masks: dry, and soaked for
- * hover. Each is painted with currentColor, so the mark still follows the
- * nav from paper to carbon. The clean outline lives on in the favicon.
+ * The ink is baked, not filtered live: the bleed was rendered once into
+ * two alpha masks, dry and soaked (hover), each painted with currentColor
+ * so the mark still follows the nav from paper to carbon. No SVG filter in
+ * the fixed nav and no per-frame hover tween. The clean outline lives on
+ * in the favicon.
  */
 interface Props {
   class?: string;

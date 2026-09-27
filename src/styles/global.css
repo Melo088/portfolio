@@ -140,6 +140,23 @@ body {
 }
 
 /*
+ * The <svg> holding the ink filter definitions (Base.astro). It only has
+ * to exist: keep it unpainted and off-screen. iOS Safari painted an opaque
+ * black square at its position, the page's top-left corner, whenever any
+ * element used one of its filters.
+ */
+.ink-defs {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*
  * Ink bleed for HTML type. The SVG filters live in Base.astro; they are
  * sized in CSS px, so there is one per scale. The soft text-shadow
  * fallback keeps a printed feel where url() filters are unsupported.

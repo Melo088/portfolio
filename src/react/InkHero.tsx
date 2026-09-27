@@ -239,14 +239,11 @@ export default function InkHero({ word, backdrop, className }: Props) {
     const host = (wrap.closest('[data-ink-host]') as HTMLElement | null) ?? wrap;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // preserveDrawingBuffer: iOS Safari can re-composite the canvas layer
-    // without a new draw (toolbar collapse, tile updates); an unpreserved
-    // buffer then shows as an opaque black block until the next render.
     const gl = canvas.getContext('webgl', {
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
-      preserveDrawingBuffer: true,
+      preserveDrawingBuffer: false,
     });
 
     const fieldCanvas = document.createElement('canvas');
@@ -475,8 +472,8 @@ export default function InkHero({ word, backdrop, className }: Props) {
       gl!.activeTexture(gl!.TEXTURE0);
       gl!.bindTexture(gl!.TEXTURE_2D, fieldTex);
       gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, fieldCanvas);
-      // Draw in the same task as the resize: a blanked buffer must never
-      // reach the compositor (iOS Safari shows it as black tiles).
+      // Draw in the same task as the resize, so a blanked buffer never
+      // reaches the screen as a flash.
       draw();
     }
 
