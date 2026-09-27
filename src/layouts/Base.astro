@@ -38,13 +38,14 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" as="image" href="/images/mark-dry.webp" type="image/webp" />
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
   </head>
   <body class="text-fg min-h-screen">
     <!--
-      Ink filters for HTML type and the mark. Sized in CSS px (the mark's
-      in glyph units), one per scale. Each: warp the outline with low
+      Ink filters for HTML type, sized in CSS px, one per scale. (The nav
+      mark uses baked masks instead, see Mark.astro.) Each: warp the outline with low
       frequency noise, soften and re-harden it (soaked edge), add a faint
       halo, and scatter spray inside the halo using the text's own color.
     -->
@@ -88,16 +89,6 @@ const ogImage = new URL('/og.jpg', Astro.site);
           <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="spray"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
         </filter>
 
-        <!-- The mark: glyph units (540 = x-height), so values are large. -->
-        <filter id="ink-mark" x="-10%" y="-15%" width="120%" height="130%" color-interpolation-filters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="5" result="warp"></feTurbulence>
-          <feDisplacementMap data-wet="scale" data-dry="26" data-soaked="60" in="SourceGraphic" in2="warp" scale="26" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
-          <feGaussianBlur data-wet="stdDeviation" data-dry="9" data-soaked="16" in="warped" stdDeviation="9" result="soft"></feGaussianBlur>
-          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.7" intercept="-0.2"></feFuncA></feComponentTransfer>
-          <feGaussianBlur data-wet="stdDeviation" data-dry="40" data-soaked="70" in="warped" stdDeviation="40" result="haloBlur"></feGaussianBlur>
-          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.35"></feFuncA></feComponentTransfer>
-          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
-        </filter>
       </defs>
     </svg>
 
@@ -194,29 +185,6 @@ const ogImage = new URL('/og.jpg', Astro.site);
         window.addEventListener('scroll', probe, { passive: true });
         window.addEventListener('resize', probe);
         probe();
-      })();
-
-      // Mark: the ink soaks on hover (tweens the #ink-mark primitives).
-      (function () {
-        var nodes = document.querySelectorAll('#ink-mark [data-wet]');
-        var marks = document.querySelectorAll('[data-ink-mark]');
-        if (!nodes.length || !marks.length) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        var t = 0, target = 0, raf = 0;
-        function step() {
-          t += (target - t) * 0.12;
-          nodes.forEach(function (n) {
-            var dry = +n.getAttribute('data-dry'), wet = +n.getAttribute('data-soaked');
-            n.setAttribute(n.getAttribute('data-wet'), (dry + (wet - dry) * t).toFixed(2));
-          });
-          if (Math.abs(target - t) > 0.004) raf = requestAnimationFrame(step);
-          else raf = 0;
-        }
-        marks.forEach(function (m) {
-          var host = m.closest('a') || m;
-          host.addEventListener('pointerenter', function () { target = 1; if (!raf) raf = requestAnimationFrame(step); });
-          host.addEventListener('pointerleave', function () { target = 0; if (!raf) raf = requestAnimationFrame(step); });
-        });
       })();
     </script>
   </body>

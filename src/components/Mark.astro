@@ -1,10 +1,13 @@
 ---
 /**
  * The "m" mark: Archivo at 900 weight, 125% width, italic, with an extra
- * forward shear. The outline is baked as a path (extracted from the
- * variable font with fontTools) so it never waits on the webfont and can
- * double as the favicon. Ink bleed comes from the #ink-mark filter in
- * Base.astro, which wets on hover.
+ * forward shear, printed in ink.
+ *
+ * The ink is baked, not filtered live. iOS Safari paints an opaque black
+ * box over an feTurbulence SVG filter inside a fixed layer (the nav), so
+ * the bleed was rendered once into two alpha masks: dry, and soaked for
+ * hover. Each is painted with currentColor, so the mark still follows the
+ * nav from paper to carbon. The clean outline lives on in the favicon.
  */
 interface Props {
   class?: string;
@@ -13,11 +16,34 @@ interface Props {
 const { class: cls = '' } = Astro.props;
 ---
 
-<svg viewBox="-40 -50 1300 640" class={cls} aria-hidden="true" data-ink-mark>
-  <path
-    fill="currentColor"
-    filter="url(#ink-mark)"
-    transform="matrix(1 0 0.1 -1 0 540)"
-    d="M15 0 108 528H290V442H299Q329 477 365.5 498.5Q402 520 441.5 530Q481 540 519 540Q600 540 649.5 515Q699 490 718 442H728Q758 477 794.5 498.5Q831 520 870.5 530Q910 540 948 540Q1053 540 1105 496.5Q1157 453 1157 368Q1157 353 1155.5 337Q1154 321 1151 304L1097 0H873L923 285Q924 292 924.5 298.5Q925 305 925 311Q925 333 917 349Q909 365 892.5 374.5Q876 384 850 384Q816 384 787.5 369.5Q759 355 740.5 329.5Q722 304 716 271L668 0H444L494 285Q495 292 495.5 298.5Q496 305 496 311Q496 333 488 349Q480 365 463.5 374.5Q447 384 421 384Q387 384 358.5 369.5Q330 355 311.5 329.5Q293 304 287 271L239 0Z"
-  ></path>
-</svg>
+<span class:list={['ink-mark', cls]} aria-hidden="true"></span>
+
+<style>
+  .ink-mark {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    aspect-ratio: 390 / 192;
+  }
+  .ink-mark::before,
+  .ink-mark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: currentColor;
+    -webkit-mask: url('/images/mark-dry.webp') center / contain no-repeat;
+    mask: url('/images/mark-dry.webp') center / contain no-repeat;
+    transition: opacity 0.45s ease;
+  }
+  .ink-mark::after {
+    -webkit-mask-image: url('/images/mark-wet.webp');
+    mask-image: url('/images/mark-wet.webp');
+    opacity: 0;
+  }
+  :global(a:hover) > .ink-mark::before {
+    opacity: 0;
+  }
+  :global(a:hover) > .ink-mark::after {
+    opacity: 1;
+  }
+</style>
