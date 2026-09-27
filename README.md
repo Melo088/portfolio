@@ -1,41 +1,40 @@
-# Portfolio — Juan Camilo Melo
+# Juan Camilo Melo · Portfolio
 
-Portfolio personal construido con **Astro + Tailwind CSS v4 + React islands**,
-según la especificación de `DESIGN_BRIEF.md`.
+Personal portfolio: Cloud & DevOps engineering. Ink on paper: a static
+Astro site with a WebGL hero, SVG ink-bleed type and a print grain over
+everything.
 
-## Comandos
+## Stack
+
+- [Astro](https://astro.build) (static output) with React islands for the
+  interactive pieces
+- Tailwind CSS v4
+- WebGL (hand-written shader) for the hero, SVG filters for the type
+- Lenis for inertial scrolling
+- Archivo (variable width) and JetBrains Mono, self-hosted via Fontsource
+
+## Commands
 
 ```bash
-npm install
-npm run dev      # servidor de desarrollo en http://localhost:4321
-npm run build    # build estático en dist/
-npm run preview  # previsualizar el build
+npm ci
+npm run dev      # dev server at http://localhost:4321
+npm run build    # static build in dist/
+npm run preview  # serve the build locally
 ```
 
-## Dónde está cada cosa
+## Where things live
 
-| Qué | Dónde |
+| What | Where |
 | --- | --- |
-| **Todo el contenido** (bio, proyectos, skills, contacto) | `src/data/site.ts` — única fuente tipada |
-| Wordmark halftone del hero | `src/react/HalftoneHero.tsx` |
-| Cursor personalizado (punto + anillo) | `src/react/CustomCursor.tsx` |
-| Smooth scroll con inercia (Lenis) | `src/react/SmoothScroll.tsx` |
-| Ticker de skills reactivo al scroll | `src/react/VelocityTicker.tsx` |
-| CTA magnético | `src/react/MagneticLink.tsx` |
-| Reveal de texto con blur | `src/react/BlurReveal.tsx` |
-| Rutas | `src/pages/` — `index`, `about`, `cv`, `proyectos/[slug]` |
+| All content (profile, now, projects, experience, skills) | `src/data/site.ts`, the single typed source |
+| Hero: bleeding wordmark over a halftone butterfly | `src/react/InkHero.tsx` |
+| Ink filters, print grain, nav surface switch | `src/layouts/Base.astro` |
+| Design tokens (paper and carbon surfaces), type | `src/styles/global.css` |
+| "m" mark, also the favicon | `src/components/Mark.astro`, `public/favicon.svg` |
+| Pages | `src/pages/`: `index`, `about`, `cv`, `projects/[slug]` |
 
-## Pendientes para personalizar
+## Credits
 
-1. **Tu foto**: reemplaza `public/images/portrait-placeholder.svg` por tu foto
-   real (puede ser `.jpg`/`.png` — actualiza la ruta `portrait` en
-   `src/data/site.ts`).
-2. **Fotos de proyectos**: reemplaza los `.svg` de `public/images/projects/`
-   por capturas reales y actualiza el campo `image` de cada proyecto en
-   `src/data/site.ts`.
-3. **URLs de repos**: rellena los campos `repo` marcados con `TODO` en
-   `src/data/site.ts` (el botón "Ver repositorio" aparece solo cuando existe).
-4. **CV**: el visor y la descarga apuntan a `public/cv.pdf`. Para actualizarlo,
-   reemplaza ese archivo.
-5. **Wordmark**: por defecto es `['JUAN CAMILO', 'MELO']`; la alternativa corta
-   `['MELO088']` se cambia en `src/data/site.ts`.
+Hero butterfly: *Nymphalis antiopa*, plate from *Birds Illustrated* (Nature
+Study Publishing Co., Chicago, c. 1900), public domain via
+[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Nymphalis_antiopa-black.jpg).
