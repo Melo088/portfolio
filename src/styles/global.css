@@ -139,12 +139,7 @@ body {
   color: var(--fg-3);
 }
 
-/*
- * The <svg> holding the ink filter definitions (Base.astro). It only has
- * to exist: keep it unpainted and off-screen. iOS Safari painted an opaque
- * black square at its position, the page's top-left corner, whenever any
- * element used one of its filters.
- */
+/* The <svg> holding the ink filter definitions only has to exist. */
 .ink-defs {
   position: absolute;
   top: 0;
@@ -167,9 +162,19 @@ body {
 .ink-md {
   filter: url('#ink-md');
 }
-.ink-lg {
-  filter: url('#ink-lg');
+/*
+ * WebKit (Safari, all iOS browsers) paints stray opaque blocks for SVG
+ * url() filters on HTML, so there the live ink becomes a soft halo. The
+ * big words and the nav mark are baked and look the same everywhere.
+ */
+.no-svg-ink .ink-sm,
+.no-svg-ink .ink-md {
+  filter: none;
+  text-shadow:
+    0 0 0.6px currentColor,
+    0 0 7px color-mix(in srgb, currentColor 28%, transparent);
 }
+
 .ink-soft {
   text-shadow:
     0 0 0.5px currentColor,

@@ -1,4 +1,5 @@
 ---
+import InkWord from './InkWord.astro';
 import { site } from '../data/site';
 import MagneticLink from '../react/MagneticLink';
 
@@ -8,7 +9,7 @@ const year = new Date().getFullYear();
 <footer id="contact" class="surface-carbon scroll-mt-0" data-surface="carbon">
   <div class="mx-auto max-w-6xl px-5 pb-8 pt-24 md:px-8 md:pt-36">
     <p class="label">(06) Contact</p>
-    <h2 class="display ink-lg mt-6 text-[clamp(5rem,17vw,14rem)]">hello.</h2>
+    <InkWord text="hello." class="mt-6 text-[clamp(5rem,17vw,14rem)]" />
     <p class="text-fg-2 mt-10 max-w-xl text-lg leading-relaxed">
       A platform to build, a pipeline to untangle or a question about one of these projects: write to me.
     </p>

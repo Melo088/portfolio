@@ -1,0 +1,40 @@
+---
+/**
+ * A big display word printed in baked ink (see scripts/bake-ink-words.mjs).
+ *
+ * The real text stays in place, transparent, so layout, selection and
+ * screen readers are untouched; the ink mask is painted over it in the
+ * surface's ink color, extending 4% / 20% around the text like the filter
+ * region it was rendered with. A new word needs `npm run bake:ink`.
+ */
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2';
+  class?: string;
+}
+
+const { text, as: Tag = 'h2', class: cls = '' } = Astro.props;
+// Same rule as the bake script: lowercase letters and digits only.
+const slug = text.toLowerCase().replace(/[^a-z0-9]/g, '');
+---
+
+<Tag class:list={['display', cls]}>
+  <span class="ink-word" style={`--ink: url('/ink/${slug}.webp')`}>{text}</span>
+</Tag>
+
+<style>
+  .ink-word {
+    position: relative;
+    display: inline-block;
+    color: transparent;
+  }
+  .ink-word::before {
+    content: '';
+    position: absolute;
+    inset: -20% -4%;
+    background-color: var(--fg);
+    -webkit-mask: var(--ink) center / 100% 100% no-repeat;
+    mask: var(--ink) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+</style>
