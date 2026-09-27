@@ -159,6 +159,18 @@ body {
     0 0 6px color-mix(in srgb, currentColor 22%, transparent);
 }
 
+/*
+ * iOS Safari paints an opaque black box when an feTurbulence SVG filter is
+ * applied to an element inside a fixed layer — the nav mark, up top. Touch
+ * devices have no hover to soak the ink anyway, so the mark drops to a flat
+ * glyph there and the artifact goes away.
+ */
+@media (hover: none) {
+  [data-ink-mark] {
+    filter: none;
+  }
+}
+
 /* Dark pill, like the kit's "+20" and "Free Download" chips. */
 .pill {
   display: inline-flex;
