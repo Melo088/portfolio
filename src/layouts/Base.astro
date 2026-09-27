@@ -41,7 +41,7 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <link rel="preload" as="image" href="/images/mark-dry.webp" type="image/webp" />
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
-    <!-- Temporary iOS diagnostics, removed before merge: ?hide=gl,grain,filters,nav -->
+    <!-- Temporary iOS diagnostics, removed before merge: ?hide=gl,grain,filters,nav,caption,ticker,big,text -->
     <script is:inline>
       (function () {
         var hide = new URLSearchParams(location.search).get('hide');
@@ -51,6 +51,10 @@ const ogImage = new URL('/og.jpg', Astro.site);
           grain: '.print-grain{display:none!important}',
           filters: '.ink-sm,.ink-md,.ink-lg{filter:none!important}',
           nav: 'header[data-nav]{display:none!important}',
+          caption: '.hero-caption .ink-sm{filter:none!important}',
+          ticker: '.ink-md.w-max{filter:none!important}',
+          big: '.ink-lg{filter:none!important}',
+          text: '.ink-md:not(.w-max),.ink-sm:not(.hero-caption .ink-sm){filter:none!important}',
         };
         var st = document.createElement('style');
         st.textContent = hide.split(',').map(function (k) { return css[k] || ''; }).join('');
