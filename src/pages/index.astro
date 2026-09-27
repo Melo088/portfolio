@@ -1,67 +1,270 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import HalftoneHero from '../react/HalftoneHero';
+import ProjectRow from '../components/ProjectRow.astro';
+import InkHero from '../react/InkHero';
 import BlurReveal from '../react/BlurReveal';
-import MagneticLink from '../react/MagneticLink';
 import VelocityTicker from '../react/VelocityTicker';
-import { site, projects, tickerSkills } from '../data/site';
+import {
+  site,
+  facts,
+  now,
+  nowUpdated,
+  projects,
+  experience,
+  skillGroups,
+  certifications,
+  tickerSkills,
+} from '../data/site';
 ---
 
 <Base>
-  <!-- Hero -->
-  <section class="flex min-h-svh flex-col justify-center px-6 pt-20">
-    <h1 class="sr-only">{site.name}, Cloud & DevOps Engineering</h1>
-    <HalftoneHero
-      client:load
-      lines={site.wordmark}
-      className="mx-auto h-[30svh] w-full max-w-7xl md:h-[54svh]"
-    />
-    <div class="mx-auto mt-8 w-full max-w-6xl text-center">
-      <p class="text-sm font-bold uppercase tracking-[0.3em] md:text-base">
-        <BlurReveal client:load text={site.taglines[0]} delay={200} />
+  <!-- Hero: bleeding wordmark over a halftone portrait -->
+  <section class="hero relative h-svh min-h-[600px] overflow-hidden" data-ink-host>
+    <h1 class="sr-only">{site.name}, {site.role}</h1>
+    <InkHero client:load word={site.wordmark} backdrop={site.heroBackdrop} className="absolute inset-0" />
+
+    <div
+      class="hero-caption pointer-events-none absolute inset-x-0 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 px-6"
+    >
+      <span class="pill mono text-[11px] md:text-xs">{site.name}</span>
+      <span class="headline ink-sm text-2xl md:text-[2rem]">{site.role}</span>
+    </div>
+
+    <p
+      class="hero-note absolute left-5 top-[24%] hidden max-w-[14.5rem] text-[11px] font-medium leading-[1.35] md:left-8 md:block"
+    >
+      Telematics Engineering, Universidad Icesi. I build the platform under the product: pipelines, GitOps,
+      infrastructure as code and the observability that keeps it honest.
+    </p>
+    <p
+      class="hero-note absolute right-5 top-[68%] hidden max-w-[13rem] text-right text-[11px] font-medium leading-[1.35] md:right-8 md:block"
+    >
+      Now: IAsLab ORCHID, orchestrating AI and ML workloads on the university GPU cluster.
+    </p>
+
+    <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 px-5 pb-5 md:px-8 md:pb-7">
+      <a href={site.cvPath} download={site.cvFileName} class="pill text-xs font-semibold" data-cursor>Download CV</a>
+      <span class="label hidden md:inline">(Scroll)</span>
+      <p class="mono text-right text-[11px] leading-tight">
+        Cali, CO<br /><time data-clock>--:--</time> UTC-5
       </p>
-      <p class="text-muted mt-3 text-xs font-bold uppercase tracking-[0.25em] md:text-sm">
-        <BlurReveal client:load text={site.taglines[1]} delay={600} step={40} />
-      </p>
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-        <MagneticLink client:load href="/#projects" variant="solid">
-          View projects
-        </MagneticLink>
-        <MagneticLink client:load href="/cv">View CV</MagneticLink>
+    </div>
+  </section>
+
+  <!-- 01 Profile -->
+  <section class="px-5 py-24 md:px-8 md:py-36">
+    <div class="mx-auto grid max-w-6xl gap-8 md:grid-cols-12">
+      <p class="label md:col-span-3">(01) Profile</p>
+      <div class="md:col-span-9">
+        <p class="headline ink-md text-[clamp(2rem,4.4vw,4rem)]">
+          <BlurReveal client:visible text={site.lede} step={28} />
+        </p>
+        <dl class="border-rule mt-16 grid grid-cols-2 border-t md:grid-cols-4">
+          {
+            facts.map((f) => (
+              <div class="border-rule border-b py-6 pr-4 md:border-b-0">
+                <dt class="label">{f.label}</dt>
+                <dd class="display ink-md mt-3 text-5xl md:text-6xl">{f.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
       </div>
     </div>
-    <div class="text-muted pb-8 pt-14 text-center text-xs uppercase tracking-widest" aria-hidden="true">
-      <span class="inline-block animate-bounce">↓</span> scroll
+  </section>
+
+  <!-- 02 Now -->
+  <section id="now" class="scroll-mt-16 px-5 pb-24 md:px-8 md:pb-36">
+    <div class="mx-auto max-w-6xl">
+      <div class="border-rule flex items-end justify-between gap-6 border-b pb-6">
+        <div>
+          <p class="label">(02) Currently</p>
+          <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">now</h2>
+        </div>
+        <p class="label pb-3 text-right">Updated<br />{nowUpdated}</p>
+      </div>
+      <ol class="grid md:grid-cols-2">
+        {
+          now.map((item) => (
+            <li class="now-item border-rule border-b py-9 md:py-12">
+              <div class="label flex justify-between gap-4">
+                <span>{item.label}</span>
+                <span>{item.period}</span>
+              </div>
+              <h3 class="headline ink-sm mt-5 text-3xl md:text-[2.5rem]">
+                {item.href ? (
+                  <a href={item.href} target="_blank" rel="noopener noreferrer" class="link-reveal">
+                    {item.title}
+                  </a>
+                ) : (
+                  item.title
+                )}
+              </h3>
+              <p class="text-fg-2 mt-4 max-w-prose text-[15px] leading-relaxed">{item.text}</p>
+              <ul class="mt-5 flex flex-wrap gap-1.5">
+                {item.stack.map((t) => (
+                  <li class="chip">{t}</li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- 03 Work (carbon stock) -->
+  <section id="work" class="surface-carbon px-5 py-24 md:px-8 md:py-36" data-surface="carbon">
+    <div class="mx-auto max-w-6xl">
+      <div class="border-rule flex items-end justify-between gap-6 border-b pb-6">
+        <div>
+          <p class="label">(03) Selected work</p>
+          <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">work</h2>
+        </div>
+        <p class="label pb-3 text-right">{projects.length} projects<br />2025 to 2026</p>
+      </div>
+      <ol>
+        {projects.map((project, i) => <ProjectRow project={project} index={i} />)}
+      </ol>
     </div>
   </section>
 
   <!-- Skills ticker, reacts to scroll velocity -->
-  <section class="border-line overflow-hidden border-y py-8 md:py-10">
+  <section class="border-rule overflow-hidden border-b py-10 md:py-14">
     <VelocityTicker client:visible items={tickerSkills} />
   </section>
 
-  <!-- Projects -->
-  <section id="projects" class="mx-auto max-w-6xl scroll-mt-24 px-6 py-20 md:py-28">
-    <p class="text-muted text-xs font-bold uppercase tracking-widest">Selected work</p>
-    <h2 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-6xl">
-      Projects
-    </h2>
-    <div class="mt-12 grid gap-8 md:grid-cols-2">
-      {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+  <!-- 04 Record -->
+  <section id="record" class="px-5 py-24 md:px-8 md:py-36">
+    <div class="mx-auto max-w-6xl">
+      <div class="border-rule border-b pb-6">
+        <p class="label">(04) Experience & education</p>
+        <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">record</h2>
+      </div>
+
+      <div class="grid gap-x-16 md:grid-cols-12">
+        <ol class="md:col-span-7">
+          {
+            experience.map((role) => (
+              <li class="border-rule border-b py-9">
+                <p class="label">{role.period}</p>
+                <h3 class="headline ink-sm mt-4 text-2xl md:text-3xl">{role.title}</h3>
+                <p class="text-fg-2 mt-1 font-medium">{role.org}</p>
+                <ul class="text-fg-2 mt-4 space-y-2 text-[15px] leading-relaxed">
+                  {role.points.map((pt) => (
+                    <li class="flex gap-3">
+                      <span class="text-fg-3 select-none" aria-hidden="true">
+                        ·
+                      </span>
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+        </ol>
+
+        <aside class="md:col-span-5">
+          <div class="border-rule border-b py-9">
+            <p class="label">{site.education.period}</p>
+            <h3 class="headline ink-sm mt-4 text-2xl md:text-3xl">{site.education.degree}</h3>
+            <p class="text-fg-2 mt-1 font-medium">{site.education.school}, {site.education.city}</p>
+            <dl class="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 text-[15px]">
+              <div>
+                <dt class="label">GPA</dt>
+                <dd class="display mt-2 text-3xl">{site.education.gpa}</dd>
+              </div>
+              <div>
+                <dt class="label">Semester</dt>
+                <dd class="display mt-2 text-3xl">{site.education.semester}</dd>
+              </div>
+              <div class="col-span-2">
+                <dt class="label">Recognition</dt>
+                {site.education.honors.map((h) => <dd class="text-fg-2 mt-1.5 leading-snug">{h}</dd>)}
+              </div>
+              <div class="col-span-2">
+                <dt class="label">Languages</dt>
+                <dd class="text-fg-2 mt-1.5">{site.languages}</dd>
+              </div>
+            </dl>
+          </div>
+          <p class="text-fg-3 py-6 text-sm leading-relaxed">
+            Coursework: {site.education.coursework}.
+          </p>
+        </aside>
+      </div>
     </div>
   </section>
 
-  <!-- Short bio -->
-  <section class="border-line border-t">
-    <div class="mx-auto max-w-6xl px-6 py-20 md:py-28">
-      <p class="text-muted text-xs font-bold uppercase tracking-widest">About me</p>
-      <p class="mt-6 max-w-3xl text-xl leading-relaxed md:text-2xl">
-        <BlurReveal client:visible text={site.bio} step={12} />
-      </p>
-      <div class="mt-10">
-        <MagneticLink client:visible href="/about">More about me</MagneticLink>
+  <!-- 05 Stack & certifications -->
+  <section id="stack" class="px-5 pb-24 md:px-8 md:pb-36">
+    <div class="mx-auto max-w-6xl">
+      <div class="border-rule border-b pb-6">
+        <p class="label">(05) Tools & certifications</p>
+        <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">stack</h2>
+      </div>
+      <div class="grid gap-x-16 md:grid-cols-12">
+        <dl class="md:col-span-7">
+          {
+            skillGroups.map((group) => (
+              <div class="border-rule grid gap-3 border-b py-6 sm:grid-cols-[9rem_1fr]">
+                <dt class="label pt-1">{group.label}</dt>
+                <dd class="text-fg text-[15px] leading-relaxed">{group.items.join(', ')}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <ol class="md:col-span-5">
+          {
+            certifications.map((c) => (
+              <li class="border-rule flex items-baseline justify-between gap-4 border-b py-5">
+                <div>
+                  <p class="font-semibold tracking-tight">{c.name}</p>
+                  <p class="text-fg-3 mt-0.5 text-sm">{c.issuer}</p>
+                </div>
+                <p class="mono text-fg-2 shrink-0 text-[11px]">{c.date}</p>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </div>
   </section>
 </Base>
+
+<style>
+  .hero-caption {
+    top: calc(var(--ink-word-bottom, 62%) + 0.25rem);
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.8s ease 0.15s,
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+  }
+  [data-ink-ready] .hero-caption {
+    opacity: 1;
+    transform: none;
+  }
+  @media (min-width: 768px) {
+    .now-item:nth-child(odd) {
+      padding-right: 2.5rem;
+    }
+    .now-item:nth-child(even) {
+      padding-left: 2.5rem;
+      border-left: 1px solid var(--rule);
+    }
+  }
+</style>
+
+<script is:inline>
+  // Local time in Cali for the hero corner.
+  (function () {
+    var el = document.querySelector('[data-clock]');
+    if (!el) return;
+    var fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Bogota' });
+    var tick = function () { el.textContent = fmt.format(new Date()); };
+    tick();
+    setInterval(tick, 15000);
+  })();
+</script>

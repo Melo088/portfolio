@@ -5,13 +5,14 @@ import MagneticLink from '../react/MagneticLink';
 const year = new Date().getFullYear();
 ---
 
-<footer id="contacto" class="border-line border-t">
-  <div class="mx-auto max-w-6xl px-6 py-20 md:py-28">
-    <p class="text-muted text-xs font-bold uppercase tracking-widest">Contact</p>
-    <h2 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-7xl">
-      Let's build something
-    </h2>
-    <div class="mt-10 flex flex-wrap items-center gap-4">
+<footer id="contact" class="surface-carbon scroll-mt-0" data-surface="carbon">
+  <div class="mx-auto max-w-6xl px-5 pb-8 pt-24 md:px-8 md:pt-36">
+    <p class="label">(06) Contact</p>
+    <h2 class="display ink-lg mt-6 text-[clamp(5rem,17vw,14rem)]">hello.</h2>
+    <p class="text-fg-2 mt-10 max-w-xl text-lg leading-relaxed">
+      A platform to build, a pipeline to untangle or a question about one of these projects: write to me.
+    </p>
+    <div class="mt-10 flex flex-wrap items-center gap-3">
       <MagneticLink client:visible href={`mailto:${site.email}`} variant="solid">
         {site.email}
       </MagneticLink>
@@ -21,12 +22,12 @@ const year = new Date().getFullYear();
       <MagneticLink client:visible href={site.linkedin} external>
         LinkedIn
       </MagneticLink>
+      <MagneticLink client:visible href="/cv">CV</MagneticLink>
     </div>
-    <div
-      class="text-muted mt-16 flex flex-col gap-2 text-xs uppercase tracking-widest md:flex-row md:items-center md:justify-between"
-    >
-      <p>© {year} {site.name}</p>
-      <p>Cali, Colombia · {site.education.degree}, class of {site.education.graduation}</p>
+
+    <div class="border-rule mt-24 flex flex-col gap-2 border-t pt-6 md:flex-row md:items-center md:justify-between">
+      <p class="label">© {year} {site.name}</p>
+      <p class="label">{site.location} · Ink rendered in WebGL</p>
     </div>
   </div>
 </footer>

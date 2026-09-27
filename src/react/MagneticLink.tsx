@@ -3,14 +3,17 @@ import { useRef, type ReactNode } from 'react';
 /**
  * Enlace/CTA magnético: dentro del área del elemento, el contenido se
  * desplaza hacia el puntero (estilo React Bits "Magnet"); al salir,
- * vuelve a su sitio con una transición elástica.
+ * vuelve a su sitio con una transición elástica. Forma de píldora de
+ * tinta (clases .pill / .pill-outline de global.css), así que se adapta
+ * sola a papel o carbón.
  */
 interface Props {
   href: string;
   children: ReactNode;
-  /** 'solid' = bloque blanco, 'outline' = borde. */
+  /** 'solid' = píldora de tinta, 'outline' = borde de tinta. */
   variant?: 'solid' | 'outline';
-  download?: boolean;
+  /** true, o el nombre de archivo sugerido para la descarga. */
+  download?: boolean | string;
   external?: boolean;
   /** Cuánto sigue al puntero (0–1). */
   strength?: number;
@@ -47,22 +50,18 @@ export default function MagneticLink({
     inner.style.transform = 'translate(0, 0)';
   }
 
-  const base =
-    'inline-block select-none text-sm font-bold uppercase tracking-widest';
-  const look =
-    variant === 'solid'
-      ? 'bg-paper text-ink hover:bg-paper/90'
-      : 'border border-paper/40 text-paper hover:border-paper';
+  const base = 'select-none text-sm font-semibold tracking-tight transition-[box-shadow,opacity]';
+  const look = variant === 'solid' ? 'pill hover:opacity-90' : 'pill-outline hover:bg-chip';
 
   return (
     <a
       href={href}
-      download={download || undefined}
+      download={download === true ? '' : download || undefined}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
       onPointerMove={onMove}
       onPointerLeave={onLeave}
-      className={`${base} ${look} px-7 py-4 transition-colors ${className}`}
+      className={`${base} ${look} !px-5 !py-3 ${className}`}
       data-cursor
     >
       <span ref={innerRef} className="block">

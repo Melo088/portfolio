@@ -19,79 +19,86 @@ const number = String(index + 1).padStart(2, '0');
 ---
 
 <Base title={project.shortTitle} description={project.summary}>
-  <article class="mx-auto max-w-6xl px-6 pb-20 pt-32">
-    <a href="/#projects" class="link-reveal text-muted text-xs font-bold uppercase tracking-widest">
-      ← All projects
-    </a>
+  <article class="mx-auto max-w-6xl px-5 pb-24 pt-32 md:px-8 md:pt-40">
+    <a href="/#work" class="label link-reveal">← All work</a>
 
-    <header class="mt-10">
-      <p class="text-muted text-xs font-bold tracking-widest">{number} · {project.year}</p>
-      <h1 class="text-condensed mt-4 max-w-4xl text-4xl font-black uppercase leading-none md:text-6xl">
+    <header class="border-rule mt-12 border-b pb-12">
+      <p class="label">({number}) {project.context} · {project.date}</p>
+      <h1 class="headline ink-md mt-6 max-w-5xl text-[clamp(2.6rem,6.2vw,5.6rem)]">
         <BlurReveal client:load text={project.title} step={30} />
       </h1>
-      <p class="text-muted mt-6 max-w-2xl text-lg leading-relaxed">{project.summary}</p>
+      <p class="text-fg-2 mt-8 max-w-3xl text-lg leading-relaxed md:text-xl">{project.summary}</p>
     </header>
 
-    <!-- Project image: replace the placeholder in public/images/projects/ -->
-    <img
-      src={project.image}
-      alt={`${project.shortTitle} project image`}
-      width="1600"
-      height="900"
-      class="border-line mt-12 aspect-video w-full border object-cover grayscale"
-    />
+    <div class="grid gap-x-16 md:grid-cols-12">
+      <div class="md:col-span-8">
+        <section class="border-rule border-b py-12">
+          <h2 class="label">The project</h2>
+          <div class="mt-6 space-y-5">
+            {project.description.map((p) => <p class="text-fg-2 text-[17px] leading-relaxed">{p}</p>)}
+          </div>
+        </section>
 
-    <div class="mt-16 grid gap-12 md:grid-cols-[2fr_1fr]">
-      <div>
-        <h2 class="text-condensed text-xl font-black uppercase">The project</h2>
-        <div class="mt-6 space-y-5">
-          {project.description.map((p) => <p class="text-muted leading-relaxed">{p}</p>)}
-        </div>
-
-        <h2 class="text-condensed mt-12 text-xl font-black uppercase">Highlights</h2>
-        <ul class="mt-6 space-y-3">
-          {
-            project.highlights.map((h) => (
-              <li class="flex gap-3 leading-relaxed">
-                <span class="text-muted select-none" aria-hidden="true">
-                  &ndash;
-                </span>
-                {h}
-              </li>
-            ))
-          }
-        </ul>
+        <section class="py-12">
+          <h2 class="label">Highlights</h2>
+          <ol class="mt-6">
+            {
+              project.highlights.map((h, i) => (
+                <li class="border-rule flex gap-5 border-b py-4 leading-relaxed">
+                  <span class="mono text-fg-3 pt-0.5 text-xs">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{h}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
       </div>
 
-      <aside>
-        <h2 class="text-muted text-xs font-bold uppercase tracking-widest">Stack</h2>
-        <ul class="mt-4 flex flex-wrap gap-2">
-          {
-            project.stack.map((tech) => (
-              <li class="border-line border px-3 py-1.5 text-xs font-bold uppercase tracking-wider">
-                {tech}
-              </li>
-            ))
-          }
-        </ul>
-        {
-          project.repo && (
-            <div class="mt-8">
-              <MagneticLink client:visible href={project.repo} external>
-                View repository
-              </MagneticLink>
+      <aside class="md:col-span-4">
+        <div class="md:sticky md:top-28">
+          <dl class="border-rule border-b py-12">
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <dt class="label">Date</dt>
+                <dd class="display mt-2 text-2xl">{project.date}</dd>
+              </div>
+              <div>
+                <dt class="label">No.</dt>
+                <dd class="display mt-2 text-2xl">{number}</dd>
+              </div>
             </div>
-          )
-        }
+            <dt class="label mt-8">Stack</dt>
+            <dd class="mt-4">
+              <ul class="flex flex-wrap gap-1.5">
+                {project.stack.map((tech) => <li class="chip">{tech}</li>)}
+              </ul>
+            </dd>
+          </dl>
+          {
+            project.repo && (
+              <div class="pt-8">
+                <MagneticLink client:visible href={project.repo} variant="solid" external>
+                  {project.repoLabel ?? 'View repository'} ↗
+                </MagneticLink>
+              </div>
+            )
+          }
+        </div>
       </aside>
     </div>
 
-    <nav class="border-line mt-20 flex items-center justify-between border-t pt-8" aria-label="Other projects">
-      <a href={`/projects/${prev.slug}`} class="link-reveal text-sm font-bold uppercase tracking-widest">
-        ← {prev.shortTitle}
+    <nav class="border-rule mt-16 grid grid-cols-2 gap-6 border-t pt-8" aria-label="Other projects">
+      <a href={`/projects/${prev.slug}`} class="group">
+        <span class="label">← Previous</span>
+        <span class="headline mt-2 block text-xl transition-transform group-hover:-translate-x-1 md:text-3xl">
+          {prev.shortTitle}
+        </span>
       </a>
-      <a href={`/projects/${next.slug}`} class="link-reveal text-right text-sm font-bold uppercase tracking-widest">
-        {next.shortTitle} →
+      <a href={`/projects/${next.slug}`} class="group text-right">
+        <span class="label">Next →</span>
+        <span class="headline mt-2 block text-xl transition-transform group-hover:translate-x-1 md:text-3xl">
+          {next.shortTitle}
+        </span>
       </a>
     </nav>
   </article>

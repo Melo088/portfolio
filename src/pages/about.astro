@@ -2,97 +2,121 @@
 import Base from '../layouts/Base.astro';
 import MagneticLink from '../react/MagneticLink';
 import BlurReveal from '../react/BlurReveal';
-import { site, skillGroups, certifications } from '../data/site';
+import { site, experience, certifications } from '../data/site';
 ---
 
 <Base title="About" description={site.bio}>
-  <section class="mx-auto max-w-6xl px-6 pb-20 pt-32">
-    <p class="text-muted text-xs font-bold uppercase tracking-widest">About</p>
-    <h1 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-6xl">
-      <BlurReveal client:load text={site.name} />
-    </h1>
+  <section class="mx-auto max-w-6xl px-5 pb-24 pt-32 md:px-8 md:pt-40">
+    <div class="border-rule border-b pb-6">
+      <p class="label">(About) {site.name}</p>
+      <h1 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">about</h1>
+    </div>
 
-    <div class="mt-12 grid gap-12 md:grid-cols-[1fr_1.6fr]">
-      <!-- Photo slot: replace public/images/portrait-placeholder.svg -->
-      <figure class="border-line border">
-        <img
-          src={site.portrait}
-          alt={`Portrait of ${site.name}`}
-          width="800"
-          height="1000"
-          class="aspect-[4/5] w-full object-cover grayscale"
-        />
+    <div class="grid gap-12 pt-12 md:grid-cols-12 md:gap-16">
+      <!-- Portrait: pre-treated image, shown as-is. -->
+      <figure class="md:col-span-5">
+        <div class="print-photo">
+          <img
+            src={site.portrait}
+            alt={`Portrait of ${site.name}`}
+            width="900"
+            height="1200"
+            class="aspect-[3/4] w-full object-cover"
+          />
+        </div>
+        <figcaption class="label mt-3 flex justify-between">
+          <span>Fig. 01</span>
+          <span>{site.name}</span>
+        </figcaption>
       </figure>
 
-      <div>
-        <p class="text-lg leading-relaxed md:text-xl">{site.bio}</p>
+      <div class="md:col-span-7">
+        <p class="headline ink-sm text-[clamp(1.6rem,2.6vw,2.3rem)] leading-[1.08]">
+          <BlurReveal client:load text={site.lede} step={24} />
+        </p>
+        <p class="text-fg-2 mt-8 text-[17px] leading-relaxed">{site.bio}</p>
 
-        <dl class="border-line mt-10 grid grid-cols-1 gap-6 border-t pt-8 sm:grid-cols-2">
+        <dl class="border-rule mt-12 grid grid-cols-1 gap-8 border-t pt-8 sm:grid-cols-2">
           <div>
-            <dt class="text-muted text-xs font-bold uppercase tracking-widest">Education</dt>
-            <dd class="mt-2 leading-relaxed">
+            <dt class="label">Education</dt>
+            <dd class="mt-3 leading-relaxed">
               {site.education.degree}<br />
-              {site.education.school}<br />
-              Class of {site.education.graduation}
+              <span class="text-fg-2">{site.education.school}, {site.education.city}</span><br />
+              <span class="text-fg-2">{site.education.period} · GPA {site.education.gpa}</span>
             </dd>
           </div>
           <div>
-            <dt class="text-muted text-xs font-bold uppercase tracking-widest">Contact</dt>
-            <dd class="mt-2 space-y-1">
+            <dt class="label">Contact</dt>
+            <dd class="mt-3 space-y-1">
               <a href={`mailto:${site.email}`} class="link-reveal block w-fit">{site.email}</a>
               <a href={site.github} target="_blank" rel="noopener noreferrer" class="link-reveal block w-fit">
-                github.com/{site.githubHandle.toLowerCase()}
+                github.com/{site.githubHandle}
               </a>
               <a href={site.linkedin} target="_blank" rel="noopener noreferrer" class="link-reveal block w-fit">
                 LinkedIn
               </a>
             </dd>
           </div>
+          <div>
+            <dt class="label">Recognition</dt>
+            {site.education.honors.map((h) => <dd class="text-fg-2 mt-3 leading-snug">{h}</dd>)}
+          </div>
+          <div>
+            <dt class="label">Languages</dt>
+            <dd class="text-fg-2 mt-3">{site.languages}</dd>
+          </div>
         </dl>
 
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 flex flex-wrap gap-3">
           <MagneticLink client:visible href="/cv" variant="solid">View CV</MagneticLink>
-          <MagneticLink client:visible href={site.cvPath} download>Download PDF</MagneticLink>
+          <MagneticLink client:visible href={site.cvPath} download={site.cvFileName}>Download PDF</MagneticLink>
         </div>
       </div>
     </div>
 
-    <!-- Skills -->
-    <div class="border-line mt-20 border-t pt-16">
-      <h2 class="text-condensed text-3xl font-black uppercase md:text-4xl">Stack & skills</h2>
-      <div class="mt-10 grid gap-10 md:grid-cols-2">
-        {
-          skillGroups.map((group) => (
-            <div>
-              <h3 class="text-muted text-xs font-bold uppercase tracking-widest">{group.label}</h3>
-              <ul class="mt-4 flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <li class="border-line border px-3 py-1.5 text-xs font-bold uppercase tracking-wider">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
+    <div class="mt-24 grid gap-x-16 md:grid-cols-12">
+      <div class="md:col-span-7">
+        <h2 class="label border-rule border-b pb-4">Experience</h2>
+        <ol>
+          {
+            experience.map((role) => (
+              <li class="border-rule grid gap-2 border-b py-6 sm:grid-cols-[10rem_1fr]">
+                <p class="mono text-fg-3 pt-1 text-[11px]">{role.period}</p>
+                <div>
+                  <p class="font-semibold tracking-tight">{role.title}</p>
+                  <p class="text-fg-2 text-sm">{role.org}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
       </div>
-    </div>
-
-    <!-- Certifications -->
-    <div class="border-line mt-16 border-t pt-16">
-      <h2 class="text-condensed text-3xl font-black uppercase md:text-4xl">Certifications</h2>
-      <ul class="mt-8 space-y-3">
-        {
-          certifications.map((cert) => (
-            <li class="flex gap-3 leading-relaxed">
-              <span class="text-muted select-none" aria-hidden="true">
-                &ndash;
-              </span>
-              {cert}
-            </li>
-          ))
-        }
-      </ul>
+      <div class="mt-12 md:col-span-5 md:mt-0">
+        <h2 class="label border-rule border-b pb-4">Certifications</h2>
+        <ol>
+          {
+            certifications.map((c) => (
+              <li class="border-rule flex items-baseline justify-between gap-4 border-b py-4">
+                <p class="text-[15px] font-medium tracking-tight">{c.name}</p>
+                <p class="mono text-fg-3 shrink-0 text-[11px]">{c.date}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
     </div>
   </section>
 </Base>
+
+<style>
+  /* The image arrives already treated (tone and texture done by hand),
+     so it is shown as-is: no filters, no overlays. */
+  /* Sits above the page-wide print grain (z 60) so the texture never lands
+     on the portrait; the nav is at z 70 so it still scrolls over it. */
+  .print-photo {
+    position: relative;
+    z-index: 61;
+    overflow: hidden;
+    background: var(--paper);
+  }
+</style>

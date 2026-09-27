@@ -1,27 +1,24 @@
 ---
-import { site } from '../data/site';
+import Mark from './Mark.astro';
 
 const links = [
-  { href: '/#projects', label: 'Projects' },
+  { href: '/#work', label: 'Work' },
+  { href: '/#now', label: 'Now' },
   { href: '/about', label: 'About' },
   { href: '/cv', label: 'CV' },
 ];
 ---
 
-<header class="fixed inset-x-0 top-0 z-50 mix-blend-difference">
-  <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-    <a
-      href="/"
-      class="text-condensed text-lg font-black tracking-tight text-white"
-      aria-label="Home"
-    >
-      {site.githubHandle}
+<header class="nav-shell fixed inset-x-0 top-0 z-[70]" data-nav>
+  <nav class="flex items-center justify-between px-5 py-4 md:px-8 md:py-5">
+    <a href="/" class="nav-mark block" aria-label="Juan Camilo Melo, home">
+      <Mark class="h-7 w-auto md:h-8" />
     </a>
-    <ul class="flex items-center gap-6 text-xs font-bold uppercase tracking-widest md:gap-10">
+    <ul class="flex items-center gap-5 text-[13px] font-semibold tracking-tight md:gap-8 md:text-sm">
       {
         links.map(({ href, label }) => (
           <li>
-            <a href={href} class="link-reveal text-white">
+            <a href={href} class="link-reveal ink-soft">
               {label}
             </a>
           </li>
@@ -30,3 +27,19 @@ const links = [
     </ul>
   </nav>
 </header>
+
+<style>
+  .nav-shell {
+    color: var(--ink);
+    transition: color 0.35s ease;
+  }
+  .nav-shell.surface-nav-carbon {
+    color: var(--carbon-ink);
+  }
+  .nav-mark {
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .nav-mark:hover {
+    transform: rotate(-4deg) scale(1.06);
+  }
+</style>

@@ -1,33 +1,201 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/archivo/wdth-italic.css';
+@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
-@theme {
-  /* Paleta del brief: negro puro, blanco, un único gris muted. */
-  --color-ink: #000000;
-  --color-paper: #ffffff;
-  --color-muted: #8f8f8f;
-  --color-line: #262626;
+/*
+ * Ink on paper. Two surfaces share one set of semantic tokens:
+ *   paper  (default): pale cyan-grey stock, charcoal ink
+ *   carbon (.surface-carbon): dark stock, pale ink
+ * Components only use fg / fg-2 / fg-3 / rule / bg, so they read
+ * correctly on either surface without variants.
+ */
+:root {
+  --paper: #c6d8da;
+  --paper-hi: #d3e3e5;
+  --ink: #232627;
+  --ink-2: #414849;
+  --ink-3: #5e6a6c;
 
-  --font-display: 'Arial Black', 'Inter Black', 'Arial', system-ui, sans-serif;
-  --font-sans: 'Inter', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --carbon: #2e3031;
+  --carbon-ink: #e3eaeb;
+  --carbon-ink-2: #b4bdbe;
+  --carbon-ink-3: #8a9495;
+
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --fg-2: var(--ink-2);
+  --fg-3: var(--ink-3);
+  --rule: rgb(35 38 39 / 0.22);
+  --chip: rgb(35 38 39 / 0.07);
+}
+
+.surface-carbon {
+  --bg: var(--carbon);
+  --fg: var(--carbon-ink);
+  --fg-2: var(--carbon-ink-2);
+  --fg-3: var(--carbon-ink-3);
+  --rule: rgb(227 234 235 / 0.2);
+  --chip: rgb(227 234 235 / 0.07);
+  background-color: var(--carbon);
+  color: var(--fg);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-rule: var(--rule);
+  --color-chip: var(--chip);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+
+  --font-sans: 'Archivo Variable', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 html {
-  background-color: var(--color-ink);
-  color: var(--color-paper);
+  background-color: var(--paper);
+  color: var(--ink);
   scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-sans);
+  font-stretch: 100%;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--paper);
+  background-image: url('/textures/paper.webp');
+  background-size: 512px 512px;
+}
+
+/* The carbon stock gets the same fibres, darkened. */
+.surface-carbon {
+  background-image: url('/textures/paper.webp');
+  background-size: 512px 512px;
+  background-blend-mode: multiply;
+  background-color: #3a3d3e;
 }
 
 ::selection {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+.surface-carbon ::selection {
+  background: var(--carbon-ink);
+  color: var(--carbon);
 }
 
-/* ---- Cursor personalizado (solo puntero fino, ver CustomCursor.tsx) ---- */
+/*
+ * Print grain: film grain, toner clumps, dust and paper fibres generated
+ * at runtime (see Base.astro) and laid over everything, ink included, like
+ * a print. Light specks show on ink, dark specks on paper.
+ */
+.print-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background-image: var(--grain, none);
+  background-size: 512px 512px;
+  opacity: 0.5;
+}
+
+/* ---- Type ---- */
+
+/* Wide italic black: the wordmark voice. */
+.display {
+  font-family: var(--font-sans);
+  font-stretch: 125%;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.86;
+}
+
+/* Tight grotesk headings, like the kit's secondary type. */
+.headline {
+  font-family: var(--font-sans);
+  font-stretch: 100%;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-weight: 450;
+  letter-spacing: 0.02em;
+}
+
+/* Section labels: small mono caps. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/*
+ * Ink bleed for HTML type. The SVG filters live in Base.astro; they are
+ * sized in CSS px, so there is one per scale. The soft text-shadow
+ * fallback keeps a printed feel where url() filters are unsupported.
+ */
+.ink-sm {
+  filter: url('#ink-sm');
+}
+.ink-md {
+  filter: url('#ink-md');
+}
+.ink-lg {
+  filter: url('#ink-lg');
+}
+.ink-soft {
+  text-shadow:
+    0 0 0.5px currentColor,
+    0 0 6px color-mix(in srgb, currentColor 22%, transparent);
+}
+
+/* Dark pill, like the kit's "+20" and "Free Download" chips. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  border-radius: 9999px;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 0.35em 0.9em 0.38em;
+  line-height: 1;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--fg) 35%, transparent);
+}
+.pill-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  border-radius: 9999px;
+  border: 1.5px solid var(--fg);
+  color: var(--fg);
+  padding: 0.35em 0.9em 0.38em;
+  line-height: 1;
+}
+
+.chip {
+  display: inline-block;
+  border-radius: 9999px;
+  background: var(--chip);
+  border: 1px solid var(--rule);
+  padding: 0.3em 0.75em;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--fg-2);
+  line-height: 1.2;
+}
+
+/* ---- Cursor (fine pointer only, see CustomCursor.tsx) ---- */
 html.cursor-active,
 html.cursor-active a,
 html.cursor-active button,
@@ -56,17 +224,10 @@ html.cursor-active [data-cursor] {
   width: 34px;
   height: 34px;
   border: 1px solid #fff;
-  opacity: 0.5;
+  opacity: 0.55;
 }
 
-/* ---- Utilidades compartidas ---- */
-.text-condensed {
-  font-family: var(--font-display);
-  font-stretch: condensed;
-  letter-spacing: -0.02em;
-}
-
-/* Enlace con subrayado que se revela on hover (de izquierda a derecha). */
+/* Underline revealed on hover, left to right. */
 .link-reveal {
   position: relative;
 }
@@ -76,7 +237,7 @@ html.cursor-active [data-cursor] {
   left: 0;
   bottom: -2px;
   width: 100%;
-  height: 1px;
+  height: 1.5px;
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left;

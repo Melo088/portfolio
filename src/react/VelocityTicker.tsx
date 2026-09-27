@@ -65,19 +65,15 @@ export default function VelocityTicker({
   }, [baseSpeed, reverse]);
 
   const row = items.map((item, i) => (
-    <span key={i} className="mx-6 inline-flex items-center gap-12 whitespace-nowrap">
-      <span className="text-condensed text-4xl font-black uppercase md:text-6xl">
-        {item}
-      </span>
-      <span className="text-muted select-none text-2xl" aria-hidden="true">
-        •
-      </span>
+    <span key={i} className="mx-5 inline-flex items-center gap-10 whitespace-nowrap md:mx-7 md:gap-14">
+      <span className="display text-5xl md:text-7xl">{item}</span>
+      <span className="bg-fg inline-block h-3 w-3 rounded-full opacity-80 md:h-4 md:w-4" aria-hidden="true" />
     </span>
   ));
 
   return (
     <div className={`overflow-hidden ${className}`} aria-hidden="true">
-      <div ref={trackRef} className="flex w-max will-change-transform">
+      <div ref={trackRef} className="ink-md flex w-max py-4 will-change-transform">
         <div className="flex shrink-0 items-center">{row}</div>
         <div className="flex shrink-0 items-center">{row}</div>
       </div>

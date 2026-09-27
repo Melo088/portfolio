@@ -4,35 +4,40 @@ import MagneticLink from '../react/MagneticLink';
 import { site } from '../data/site';
 ---
 
-<Base title="CV" description={`${site.name}'s CV. Cloud & DevOps Engineering.`}>
-  <section class="mx-auto max-w-6xl px-6 pb-20 pt-32">
-    <div class="flex flex-wrap items-end justify-between gap-6">
+<Base title="CV" description={`${site.name}'s CV. ${site.role}.`}>
+  <section class="mx-auto max-w-6xl px-5 pb-24 pt-32 md:px-8 md:pt-40">
+    <div class="border-rule flex flex-wrap items-end justify-between gap-6 border-b pb-6">
       <div>
-        <p class="text-muted text-xs font-bold uppercase tracking-widest">Curriculum vitae</p>
-        <h1 class="text-condensed mt-4 text-4xl font-black uppercase leading-none md:text-6xl">
-          CV
-        </h1>
+        <p class="label">(CV) Curriculum vitae · 2026</p>
+        <h1 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">cv</h1>
       </div>
-      <MagneticLink client:load href={site.cvPath} variant="solid" download>
-        Download PDF
-      </MagneticLink>
+      <div class="pb-3">
+        <MagneticLink client:load href={site.cvPath} variant="solid" download={site.cvFileName}>
+          Download PDF
+        </MagneticLink>
+      </div>
     </div>
 
-    <!-- Embedded viewer; the actual PDF lives at public/cv.pdf -->
+    <!-- Embedded viewer; the PDF lives at public/juancmelo-cv.pdf -->
     <object
       data={site.cvPath}
       type="application/pdf"
-      class="border-line mt-10 h-[80vh] w-full border"
+      class="border-rule mt-10 h-[82vh] w-full rounded-sm border"
       aria-label={`${site.name}'s CV in PDF`}
     >
-      <div class="border-line flex h-full flex-col items-center justify-center gap-4 border p-10 text-center">
-        <p class="text-muted max-w-md leading-relaxed">
+      <div class="flex h-full flex-col items-center justify-center gap-4 p-10 text-center">
+        <p class="text-fg-2 max-w-md leading-relaxed">
           Your browser can't display the embedded PDF. Download it directly:
         </p>
-        <a href={site.cvPath} download class="link-reveal text-sm font-bold uppercase tracking-widest">
-          Download CV →
-        </a>
+        <a href={site.cvPath} download={site.cvFileName} class="pill text-sm font-semibold">Download CV</a>
       </div>
     </object>
   </section>
 </Base>
+
+<style is:global>
+  /* The grain stays, but lighter: the PDF has to read cleanly. */
+  .print-grain {
+    opacity: 0.2;
+  }
+</style>

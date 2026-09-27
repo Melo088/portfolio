@@ -12,15 +12,16 @@ interface Props {
 }
 
 const { title, description = site.bio } = Astro.props;
-const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Cloud & DevOps Engineering`;
+const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.role}`;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#c6d8da" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -28,7 +29,66 @@ const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Cloud & De
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
   </head>
-  <body class="bg-ink text-paper min-h-screen">
+  <body class="text-fg min-h-screen">
+    <!--
+      Ink filters for HTML type and the mark. Sized in CSS px (the mark's
+      in glyph units), one per scale. Each: warp the outline with low
+      frequency noise, soften and re-harden it (soaked edge), add a faint
+      halo, and scatter spray inside the halo using the text's own color.
+    -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="ink-sm" x="-4%" y="-20%" width="108%" height="140%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="2" result="warp"></feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="warp" scale="1.6" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
+          <feGaussianBlur in="warped" stdDeviation="0.45" result="soft"></feGaussianBlur>
+          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.5" intercept="-0.05"></feFuncA></feComponentTransfer>
+          <feGaussianBlur in="warped" stdDeviation="2.5" result="haloBlur"></feGaussianBlur>
+          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.3"></feFuncA></feComponentTransfer>
+          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
+        </filter>
+
+        <filter id="ink-md" x="-4%" y="-20%" width="108%" height="140%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="3" seed="4" result="warp"></feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="warp" scale="4" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
+          <feGaussianBlur in="warped" stdDeviation="0.9" result="soft"></feGaussianBlur>
+          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.7" intercept="-0.18"></feFuncA></feComponentTransfer>
+          <feGaussianBlur in="warped" stdDeviation="5" result="haloBlur"></feGaussianBlur>
+          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.24"></feFuncA></feComponentTransfer>
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" seed="9" result="grit"></feTurbulence>
+          <feColorMatrix in="grit" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  14 0 0 0 -9.4" result="gritA"></feColorMatrix>
+          <feComponentTransfer in="haloBlur" result="zone"><feFuncA type="linear" slope="4"></feFuncA></feComponentTransfer>
+          <feComposite in="zone" in2="gritA" operator="in" result="spray"></feComposite>
+          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="spray"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
+        </filter>
+
+        <filter id="ink-lg" x="-4%" y="-20%" width="108%" height="140%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="warp"></feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="warp" scale="9" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
+          <feGaussianBlur in="warped" stdDeviation="1.8" result="soft"></feGaussianBlur>
+          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.8" intercept="-0.3"></feFuncA></feComponentTransfer>
+          <feGaussianBlur in="warped" stdDeviation="11" result="haloBlur"></feGaussianBlur>
+          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.32"></feFuncA></feComponentTransfer>
+          <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="11" result="grit"></feTurbulence>
+          <feColorMatrix in="grit" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  14 0 0 0 -8.5" result="gritA"></feColorMatrix>
+          <feComponentTransfer in="haloBlur" result="zone"><feFuncA type="linear" slope="4"></feFuncA></feComponentTransfer>
+          <feComposite in="zone" in2="gritA" operator="in" result="spray"></feComposite>
+          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="spray"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
+        </filter>
+
+        <!-- The mark: glyph units (540 = x-height), so values are large. -->
+        <filter id="ink-mark" x="-10%" y="-15%" width="120%" height="130%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="5" result="warp"></feTurbulence>
+          <feDisplacementMap data-wet="scale" data-dry="26" data-soaked="60" in="SourceGraphic" in2="warp" scale="26" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
+          <feGaussianBlur data-wet="stdDeviation" data-dry="9" data-soaked="16" in="warped" stdDeviation="9" result="soft"></feGaussianBlur>
+          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.7" intercept="-0.2"></feFuncA></feComponentTransfer>
+          <feGaussianBlur data-wet="stdDeviation" data-dry="40" data-soaked="70" in="warped" stdDeviation="40" result="haloBlur"></feGaussianBlur>
+          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.35"></feFuncA></feComponentTransfer>
+          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
+        </filter>
+      </defs>
+    </svg>
+
     <SmoothScroll client:load />
     <CustomCursor client:idle />
     <Nav />
@@ -36,5 +96,116 @@ const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Cloud & De
       <slot />
     </main>
     <Footer />
+    <div class="print-grain" aria-hidden="true"></div>
+
+    <script is:inline>
+      // Print grain tile (512px): film grain, toner clumps, dust specks and
+      // a few short paper fibres. No lines. Generated here instead of
+      // shipped: the noise is incompressible (hundreds of KB as an image).
+      (function () {
+        var S = 512;
+        var c = document.createElement('canvas');
+        c.width = c.height = S;
+        var x = c.getContext('2d');
+        if (!x) return;
+        var img = x.createImageData(S, S);
+        var d = img.data;
+        var seed = 20260927;
+        function rnd() {
+          seed = (seed * 1664525 + 1013904223) >>> 0;
+          return seed / 4294967296;
+        }
+        // Value noise on a wrapping lattice (4px cells): toner clumping.
+        var G = 128, lat = new Float32Array(G * G);
+        for (var i = 0; i < G * G; i++) lat[i] = rnd();
+        function clump(px, py) {
+          var fx = px / 4, fy = py / 4;
+          var xi = Math.floor(fx), yi = Math.floor(fy), xf = fx - xi, yf = fy - yi;
+          var x0 = xi % G, y0 = yi % G, x1 = (x0 + 1) % G, y1 = (y0 + 1) % G;
+          var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+          var a = lat[y0 * G + x0], b = lat[y0 * G + x1], cc = lat[y1 * G + x0], dd = lat[y1 * G + x1];
+          return a + (b - a) * u + (cc - a) * v + (a - b - cc + dd) * u * v;
+        }
+        for (var yy = 0; yy < S; yy++) {
+          for (var xx = 0; xx < S; xx++) {
+            var k = (yy * S + xx) * 4;
+            var grain = (rnd() + rnd() + rnd() - 1.5) / 1.5;
+            var v = grain * 0.85 + (clump(xx, yy) - 0.5) * 0.5;
+            var r = rnd();
+            if (r > 0.9994) v = -1.5; // dark dust
+            else if (r > 0.9989) v = 1.3; // light fleck
+            var a = Math.min(1, Math.abs(v));
+            var w = v > 0 ? 255 : 0;
+            d[k] = d[k + 1] = d[k + 2] = w;
+            d[k + 3] = a * 84;
+          }
+        }
+        x.putImageData(img, 0, 0);
+        // Paper fibres: short curved strands, drawn at every wrap offset
+        // so the tile stays seamless.
+        x.lineCap = 'round';
+        for (var f = 0; f < 90; f++) {
+          var fx0 = rnd() * S, fy0 = rnd() * S, ang = rnd() * 6.2832, len = 5 + rnd() * 18;
+          var bend = (rnd() - 0.5) * len * 0.8;
+          var ex = fx0 + Math.cos(ang) * len, ey = fy0 + Math.sin(ang) * len;
+          var mx = (fx0 + ex) / 2 - Math.sin(ang) * bend, my = (fy0 + ey) / 2 + Math.cos(ang) * bend;
+          x.lineWidth = 0.5 + rnd() * 0.5;
+          x.strokeStyle = rnd() > 0.45 ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.14)';
+          for (var ox = -S; ox <= S; ox += S) {
+            for (var oy = -S; oy <= S; oy += S) {
+              x.beginPath();
+              x.moveTo(fx0 + ox, fy0 + oy);
+              x.quadraticCurveTo(mx + ox, my + oy, ex + ox, ey + oy);
+              x.stroke();
+            }
+          }
+        }
+        c.toBlob(function (b) {
+          if (b) document.documentElement.style.setProperty('--grain', 'url(' + URL.createObjectURL(b) + ')');
+        });
+      })();
+
+      // Nav surface: pale ink over carbon sections, charcoal over paper.
+      (function () {
+        var nav = document.querySelector('[data-nav]');
+        var dark = document.querySelectorAll('[data-surface="carbon"]');
+        if (!nav || !dark.length) return;
+        var probe = function () {
+          var y = 28;
+          var on = false;
+          dark.forEach(function (el) {
+            var r = el.getBoundingClientRect();
+            if (r.top <= y && r.bottom >= y) on = true;
+          });
+          nav.classList.toggle('surface-nav-carbon', on);
+        };
+        window.addEventListener('scroll', probe, { passive: true });
+        window.addEventListener('resize', probe);
+        probe();
+      })();
+
+      // Mark: the ink soaks on hover (tweens the #ink-mark primitives).
+      (function () {
+        var nodes = document.querySelectorAll('#ink-mark [data-wet]');
+        var marks = document.querySelectorAll('[data-ink-mark]');
+        if (!nodes.length || !marks.length) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var t = 0, target = 0, raf = 0;
+        function step() {
+          t += (target - t) * 0.12;
+          nodes.forEach(function (n) {
+            var dry = +n.getAttribute('data-dry'), wet = +n.getAttribute('data-soaked');
+            n.setAttribute(n.getAttribute('data-wet'), (dry + (wet - dry) * t).toFixed(2));
+          });
+          if (Math.abs(target - t) > 0.004) raf = requestAnimationFrame(step);
+          else raf = 0;
+        }
+        marks.forEach(function (m) {
+          var host = m.closest('a') || m;
+          host.addEventListener('pointerenter', function () { target = 1; if (!raf) raf = requestAnimationFrame(step); });
+          host.addEventListener('pointerleave', function () { target = 0; if (!raf) raf = requestAnimationFrame(step); });
+        });
+      })();
+    </script>
   </body>
 </html>
