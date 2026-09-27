@@ -11,3 +11,6 @@ node_modules/
 
 # os / editor
 .DS_Store
+
+# lighthouse ci
+.lighthouseci/

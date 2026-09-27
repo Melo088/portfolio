@@ -41,7 +41,10 @@ export default function BlurReveal({ text, delay = 0, step = 60, className = '' 
   const words = text.split(' ');
 
   return (
-    <span ref={ref} className={className} aria-label={text}>
+    <span ref={ref} className={className}>
+      {/* aria-label is not allowed on a generic span: expose the text to
+          assistive tech through a visually hidden copy instead. */}
+      <span className="sr-only">{text}</span>
       {words.map((word, i) => (
         <span key={i} aria-hidden="true">
           <span

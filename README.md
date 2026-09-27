@@ -33,6 +33,21 @@ npm run preview  # serve the build locally
 | "m" mark, also the favicon | `src/components/Mark.astro`, `public/favicon.svg` |
 | Pages | `src/pages/`: `index`, `about`, `cv`, `projects/[slug]` |
 
+## CI/CD
+
+GitHub Actions ([`pipeline.yml`](.github/workflows/pipeline.yml)), hosted on
+Cloudflare Pages at [mde-melo.me](https://mde-melo.me).
+
+| Trigger | Stages |
+| --- | --- |
+| Pull request | Type check, build, internal link check, Lighthouse gate (accessibility, SEO, best practices), preview deploy with its URL commented on the PR |
+| Push to `main` | Same checks, production deploy, smoke test against the new deployment |
+
+- Security and cache headers live in [`public/_headers`](public/_headers)
+- Every action is pinned to a commit SHA; Dependabot bumps npm and actions weekly
+- The Pages project is created on first deploy by
+  [`scripts/ensure-pages-project.sh`](scripts/ensure-pages-project.sh)
+
 ## Credits
 
 Hero butterfly: *Nymphalis antiopa*, plate from *Birds Illustrated* (Nature
