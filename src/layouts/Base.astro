@@ -41,6 +41,22 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <link rel="preload" as="image" href="/images/mark-dry.webp" type="image/webp" />
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
+    <!-- Temporary iOS diagnostics, removed before merge: ?hide=gl,grain,filters,nav -->
+    <script is:inline>
+      (function () {
+        var hide = new URLSearchParams(location.search).get('hide');
+        if (!hide) return;
+        var css = {
+          gl: '[data-ink-host] canvas{display:none!important}',
+          grain: '.print-grain{display:none!important}',
+          filters: '.ink-sm,.ink-md,.ink-lg{filter:none!important}',
+          nav: 'header[data-nav]{display:none!important}',
+        };
+        var st = document.createElement('style');
+        st.textContent = hide.split(',').map(function (k) { return css[k] || ''; }).join('');
+        document.head.appendChild(st);
+      })();
+    </script>
   </head>
   <body class="text-fg min-h-screen">
     <!--
