@@ -1,4 +1,5 @@
 ---
+import InkWord from '../components/InkWord.astro';
 import Base from '../layouts/Base.astro';
 import MagneticLink from '../react/MagneticLink';
 import { site } from '../data/site';
@@ -9,7 +10,7 @@ import { site } from '../data/site';
     <div class="border-rule flex flex-wrap items-end justify-between gap-6 border-b pb-6">
       <div>
         <p class="label">(CV) Curriculum vitae · 2026</p>
-        <h1 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">cv</h1>
+        <InkWord as="h1" text="cv" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
       </div>
       <div class="pb-3">
         <MagneticLink client:load href={site.cvPath} variant="solid" download={site.cvFileName}>

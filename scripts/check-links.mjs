@@ -1,7 +1,7 @@
-// Internal link check for the static build. Every root-relative href, src
-// and object data in every HTML page must resolve to a built file, and
-// every #fragment must match an id on the target page. External links are
-// out of scope: they are flaky in CI and not ours to fix.
+// Internal link check for the static build. Every root-relative href, src,
+// object data and inline-style url() in every HTML page must resolve to a
+// built file, and every #fragment must match an id on the target page.
+// External links are out of scope: they are flaky in CI and not ours to fix.
 //
 // Usage: node scripts/check-links.mjs dist
 import { readdir, readFile, stat } from 'node:fs/promises';
@@ -53,7 +53,11 @@ let checked = 0;
 
 for (const page of pages) {
   const html = await readFile(page, 'utf8');
-  const refs = [...html.matchAll(/\s(?:href|src|data)="([^"]+)"/g)].map((m) => m[1]);
+  const refs = [
+    ...[...html.matchAll(/\s(?:href|src|data)="([^"]+)"/g)].map((m) => m[1]),
+    // url() in inline styles, e.g. the baked ink masks of InkWord.astro.
+    ...[...html.replaceAll('&#39;', "'").matchAll(/url\((['"]?)(\/[^'")]+)\1\)/g)].map((m) => m[2]),
+  ];
   for (const ref of refs) {
     if (!ref.startsWith('/') || ref.startsWith('//')) continue;
     checked++;

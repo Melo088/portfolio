@@ -139,6 +139,18 @@ body {
   color: var(--fg-3);
 }
 
+/* The <svg> holding the ink filter definitions only has to exist. */
+.ink-defs {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /*
  * Ink bleed for HTML type. The SVG filters live in Base.astro; they are
  * sized in CSS px, so there is one per scale. The soft text-shadow
@@ -150,25 +162,23 @@ body {
 .ink-md {
   filter: url('#ink-md');
 }
-.ink-lg {
-  filter: url('#ink-lg');
+/*
+ * WebKit (Safari, all iOS browsers) paints stray opaque blocks for SVG
+ * url() filters on HTML, so there the live ink becomes a soft halo. The
+ * big words and the nav mark are baked and look the same everywhere.
+ */
+.no-svg-ink .ink-sm,
+.no-svg-ink .ink-md {
+  filter: none;
+  text-shadow:
+    0 0 0.6px currentColor,
+    0 0 7px color-mix(in srgb, currentColor 28%, transparent);
 }
+
 .ink-soft {
   text-shadow:
     0 0 0.5px currentColor,
     0 0 6px color-mix(in srgb, currentColor 22%, transparent);
-}
-
-/*
- * iOS Safari paints an opaque black box when an feTurbulence SVG filter is
- * applied to an element inside a fixed layer — the nav mark, up top. Touch
- * devices have no hover to soak the ink anyway, so the mark drops to a flat
- * glyph there and the artifact goes away.
- */
-@media (hover: none) {
-  [data-ink-mark] {
-    filter: none;
-  }
 }
 
 /* Dark pill, like the kit's "+20" and "Free Download" chips. */

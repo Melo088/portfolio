@@ -1,4 +1,5 @@
 ---
+import InkWord from '../components/InkWord.astro';
 import Base from '../layouts/Base.astro';
 import MagneticLink from '../react/MagneticLink';
 import BlurReveal from '../react/BlurReveal';
@@ -9,7 +10,7 @@ import { site, experience, certifications } from '../data/site';
   <section class="mx-auto max-w-6xl px-5 pb-24 pt-32 md:px-8 md:pt-40">
     <div class="border-rule border-b pb-6">
       <p class="label">(About) {site.name}</p>
-      <h1 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">about</h1>
+      <InkWord as="h1" text="about" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
     </div>
 
     <div class="grid gap-12 pt-12 md:grid-cols-12 md:gap-16">

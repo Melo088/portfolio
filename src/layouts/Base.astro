@@ -38,17 +38,26 @@ const ogImage = new URL('/og.jpg', Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" as="image" href="/images/mark-dry.webp" type="image/webp" />
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
+    <script is:inline>
+      // WebKit (Safari, and every browser on iOS) paints stray opaque blocks
+      // when HTML text uses SVG url() filters. Flag it before first paint so
+      // the ink falls back to CSS there (see .no-svg-ink in global.css).
+      if (/Apple/.test(navigator.vendor)) document.documentElement.classList.add('no-svg-ink');
+    </script>
   </head>
   <body class="text-fg min-h-screen">
     <!--
-      Ink filters for HTML type and the mark. Sized in CSS px (the mark's
-      in glyph units), one per scale. Each: warp the outline with low
-      frequency noise, soften and re-harden it (soaked edge), add a faint
-      halo, and scatter spray inside the halo using the text's own color.
+      Live ink filters for small and medium HTML type, sized in CSS px. Each:
+      warp the outline with low frequency noise, soften and re-harden it
+      (soaked edge), add a faint halo, and scatter spray inside the halo
+      using the text's own color. The nav mark and the big display words use
+      baked masks instead (Mark.astro, InkWord.astro); WebKit gets a CSS
+      fallback (.no-svg-ink).
     -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <svg class="ink-defs" width="0" height="0" aria-hidden="true" focusable="false">
       <defs>
         <filter id="ink-sm" x="-4%" y="-20%" width="108%" height="140%" color-interpolation-filters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="2" result="warp"></feTurbulence>
@@ -74,30 +83,6 @@ const ogImage = new URL('/og.jpg', Astro.site);
           <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="spray"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
         </filter>
 
-        <filter id="ink-lg" x="-4%" y="-20%" width="108%" height="140%" color-interpolation-filters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="7" result="warp"></feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="warp" scale="9" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
-          <feGaussianBlur in="warped" stdDeviation="1.8" result="soft"></feGaussianBlur>
-          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.8" intercept="-0.3"></feFuncA></feComponentTransfer>
-          <feGaussianBlur in="warped" stdDeviation="11" result="haloBlur"></feGaussianBlur>
-          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.32"></feFuncA></feComponentTransfer>
-          <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="11" result="grit"></feTurbulence>
-          <feColorMatrix in="grit" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  14 0 0 0 -8.5" result="gritA"></feColorMatrix>
-          <feComponentTransfer in="haloBlur" result="zone"><feFuncA type="linear" slope="4"></feFuncA></feComponentTransfer>
-          <feComposite in="zone" in2="gritA" operator="in" result="spray"></feComposite>
-          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="spray"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
-        </filter>
-
-        <!-- The mark: glyph units (540 = x-height), so values are large. -->
-        <filter id="ink-mark" x="-10%" y="-15%" width="120%" height="130%" color-interpolation-filters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="5" result="warp"></feTurbulence>
-          <feDisplacementMap data-wet="scale" data-dry="26" data-soaked="60" in="SourceGraphic" in2="warp" scale="26" xChannelSelector="R" yChannelSelector="G" result="warped"></feDisplacementMap>
-          <feGaussianBlur data-wet="stdDeviation" data-dry="9" data-soaked="16" in="warped" stdDeviation="9" result="soft"></feGaussianBlur>
-          <feComponentTransfer in="soft" result="body"><feFuncA type="linear" slope="1.7" intercept="-0.2"></feFuncA></feComponentTransfer>
-          <feGaussianBlur data-wet="stdDeviation" data-dry="40" data-soaked="70" in="warped" stdDeviation="40" result="haloBlur"></feGaussianBlur>
-          <feComponentTransfer in="haloBlur" result="halo"><feFuncA type="linear" slope="0.35"></feFuncA></feComponentTransfer>
-          <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
-        </filter>
       </defs>
     </svg>
 
@@ -194,29 +179,6 @@ const ogImage = new URL('/og.jpg', Astro.site);
         window.addEventListener('scroll', probe, { passive: true });
         window.addEventListener('resize', probe);
         probe();
-      })();
-
-      // Mark: the ink soaks on hover (tweens the #ink-mark primitives).
-      (function () {
-        var nodes = document.querySelectorAll('#ink-mark [data-wet]');
-        var marks = document.querySelectorAll('[data-ink-mark]');
-        if (!nodes.length || !marks.length) return;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        var t = 0, target = 0, raf = 0;
-        function step() {
-          t += (target - t) * 0.12;
-          nodes.forEach(function (n) {
-            var dry = +n.getAttribute('data-dry'), wet = +n.getAttribute('data-soaked');
-            n.setAttribute(n.getAttribute('data-wet'), (dry + (wet - dry) * t).toFixed(2));
-          });
-          if (Math.abs(target - t) > 0.004) raf = requestAnimationFrame(step);
-          else raf = 0;
-        }
-        marks.forEach(function (m) {
-          var host = m.closest('a') || m;
-          host.addEventListener('pointerenter', function () { target = 1; if (!raf) raf = requestAnimationFrame(step); });
-          host.addEventListener('pointerleave', function () { target = 0; if (!raf) raf = requestAnimationFrame(step); });
-        });
       })();
     </script>
   </body>

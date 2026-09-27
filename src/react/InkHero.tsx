@@ -353,6 +353,7 @@ export default function InkHero({ word, backdrop, className }: Props) {
           im.data[i + 3] = a * 255;
         }
         ctx.putImageData(im, 0, 0);
+        canvas.style.opacity = '1';
       };
       document.fonts?.ready.then(() => !disposed && layout2d());
       layout2d();
@@ -431,6 +432,7 @@ export default function InkHero({ word, backdrop, className }: Props) {
     gl.uniform1f(u.backdropAlpha, P.backdropAlpha);
     gl.uniform1f(u.wingFold, reduced ? 0 : P.wingFold);
 
+    let shown = false;
     let backdropAspect = 1.5;
     let hasBackdrop = 0;
     if (backdrop) {
@@ -454,17 +456,25 @@ export default function InkHero({ word, backdrop, className }: Props) {
       width = Math.max(1, Math.floor(rect.width));
       height = Math.max(1, Math.floor(rect.height));
       dpr = Math.min(window.devicePixelRatio || 1, P.maxDpr);
-      canvas!.width = Math.round(width * dpr);
-      canvas!.height = Math.round(height * dpr);
-      canvas!.style.width = `${width}px`;
-      canvas!.style.height = `${height}px`;
-      gl!.viewport(0, 0, canvas!.width, canvas!.height);
+      // Reassigning canvas.width reallocates (and blanks) the drawing
+      // buffer even at the same size, so only touch it on a real change.
+      const bw = Math.round(width * dpr);
+      const bh = Math.round(height * dpr);
+      if (canvas!.width !== bw || canvas!.height !== bh) {
+        canvas!.width = bw;
+        canvas!.height = bh;
+        canvas!.style.width = `${width}px`;
+        canvas!.style.height = `${height}px`;
+        gl!.viewport(0, 0, bw, bh);
+      }
 
       buildField();
       gl!.activeTexture(gl!.TEXTURE0);
       gl!.bindTexture(gl!.TEXTURE_2D, fieldTex);
       gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGBA, gl!.RGBA, gl!.UNSIGNED_BYTE, fieldCanvas);
-      request();
+      // Draw in the same task as the resize, so a blanked buffer never
+      // reaches the screen as a flash.
+      draw();
     }
 
     function draw() {
@@ -490,6 +500,11 @@ export default function InkHero({ word, backdrop, className }: Props) {
       gl!.clearColor(0, 0, 0, 0);
       gl!.clear(gl!.COLOR_BUFFER_BIT);
       gl!.drawArrays(gl!.TRIANGLES, 0, 3);
+      // Stay invisible until there is a real frame to show.
+      if (!shown) {
+        shown = true;
+        canvas!.style.opacity = '1';
+      }
     }
 
     function request() {
@@ -509,9 +524,13 @@ export default function InkHero({ word, backdrop, className }: Props) {
     }
 
     let resizeTimer = 0;
-    const ro = new ResizeObserver(() => {
+    const ro = new ResizeObserver(([entry]) => {
+      // The observer also fires once on observe(): skip it when nothing
+      // actually changed since the initial layout.
+      const r = entry.contentRect;
+      if (Math.floor(r.width) === width && Math.floor(r.height) === height) return;
       clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(layout, width ? 90 : 0);
+      resizeTimer = window.setTimeout(layout, 90);
     });
     ro.observe(wrap);
 
@@ -545,7 +564,10 @@ export default function InkHero({ word, backdrop, className }: Props) {
 
   return (
     <div ref={wrapRef} className={className} aria-hidden="true">
-      <canvas ref={canvasRef} className="block h-full w-full" />
+      <canvas
+        ref={canvasRef}
+        className="block h-full w-full opacity-0 transition-opacity duration-500"
+      />
     </div>
   );
 }

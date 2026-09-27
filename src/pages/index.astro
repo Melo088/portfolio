@@ -1,4 +1,5 @@
 ---
+import InkWord from '../components/InkWord.astro';
 import Base from '../layouts/Base.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import InkHero from '../react/InkHero';
@@ -79,7 +80,7 @@ import {
       <div class="border-rule flex items-end justify-between gap-6 border-b pb-6">
         <div>
           <p class="label">(02) Currently</p>
-          <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">now</h2>
+          <InkWord text="now" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
         </div>
         <p class="label pb-3 text-right">Updated<br />{nowUpdated}</p>
       </div>
@@ -119,7 +120,7 @@ import {
       <div class="border-rule flex items-end justify-between gap-6 border-b pb-6">
         <div>
           <p class="label">(03) Selected work</p>
-          <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">work</h2>
+          <InkWord text="work" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
         </div>
         <p class="label pb-3 text-right">{projects.length} projects<br />2025 to 2026</p>
       </div>
@@ -139,7 +140,7 @@ import {
     <div class="mx-auto max-w-6xl">
       <div class="border-rule border-b pb-6">
         <p class="label">(04) Experience & education</p>
-        <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">record</h2>
+        <InkWord text="record" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
       </div>
 
       <div class="grid gap-x-16 md:grid-cols-12">
@@ -202,7 +203,7 @@ import {
     <div class="mx-auto max-w-6xl">
       <div class="border-rule border-b pb-6">
         <p class="label">(05) Tools & certifications</p>
-        <h2 class="display ink-lg mt-4 text-[clamp(4.5rem,13vw,11rem)]">stack</h2>
+        <InkWord text="stack" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
       </div>
       <div class="grid gap-x-16 md:grid-cols-12">
         <dl class="md:col-span-7">
