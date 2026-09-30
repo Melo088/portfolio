@@ -1,0 +1,37 @@
+name: Dependabot auto-merge
+
+# Dependabot opens a PR per update. Ones that only move minor and patch
+# versions are safe to take automatically: they enable auto-merge here, the
+# required checks (Check & build, Lighthouse) run, and GitHub merges them and
+# deletes the branch. Major updates are left open for a human to review.
+#
+# Repository auto-merge must be enabled for this to work.
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    name: Auto-merge minor and patch
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+      - name: Enable auto-merge
+        # update-type is the highest semver change in the PR, so a grouped
+        # minor-and-patch PR passes and an individual major one does not.
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
