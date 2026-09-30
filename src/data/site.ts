@@ -127,7 +127,7 @@ export const now: NowItem[] = [
   {
     label: 'Platforms I',
     title: 'KitSalud Móvil',
-    period: '2026-2',
+    period: 'Aug to Nov 2026',
     text: 'A portable primary-care health kit that keeps working without Internet: segmented network with a captive portal, a small virtualized platform, health apps and an offline library, all observed.',
     stack: ['OPNsense', 'KVM', 'BIND9', 'Samba AD', 'DHIS2', 'Kiwix', 'Prometheus', 'Grafana', 'Loki'],
     href: 'https://github.com/kitsalud-movil-plats1',
@@ -145,7 +145,7 @@ export const experience: Role[] = [
   {
     title: 'Networking Laboratory Assistant',
     org: 'Universidad Icesi',
-    period: 'Feb 2026 to present',
+    period: 'Since Feb 2026',
     points: [
       'Maintain and monitor the internal network of the university lab, keeping specialized equipment healthy and available.',
       'Hands-on support during lab sessions: device configuration, connectivity troubleshooting and hardware maintenance.',
