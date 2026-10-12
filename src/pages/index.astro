@@ -60,7 +60,7 @@ import {
         <p class="headline ink-md text-[clamp(2rem,4.4vw,4rem)]">
           <BlurReveal client:visible text={site.lede} step={28} />
         </p>
-        <dl class="border-rule mt-16 grid grid-cols-2 border-t md:grid-cols-4">
+        <dl class="border-rule mt-16 grid grid-cols-2 border-t md:grid-cols-3">
           {
             facts.map((f) => (
               <div class="border-rule border-b py-6 pr-4 md:border-b-0">
@@ -148,8 +148,10 @@ import {
           {
             experience.map((role) => (
               <li class="border-rule border-b py-9">
-                <p class="label">{role.period}</p>
-                <h3 class="headline ink-sm mt-4 text-2xl md:text-3xl">{role.title}</h3>
+                <div class="flex items-baseline justify-between gap-x-4">
+                  <h3 class="headline ink-sm min-w-0 flex-1 text-2xl md:text-3xl">{role.title}</h3>
+                  <p class="label shrink-0 text-right">{role.period}</p>
+                </div>
                 <p class="text-fg-2 mt-1 font-medium">{role.org}</p>
                 <ul class="text-fg-2 mt-4 space-y-2 text-[15px] leading-relaxed">
                   {role.points.map((pt) => (
@@ -168,8 +170,10 @@ import {
 
         <aside class="md:col-span-5">
           <div class="border-rule border-b py-9">
-            <p class="label">{site.education.period}</p>
-            <h3 class="headline ink-sm mt-4 text-2xl md:text-3xl">{site.education.degree}</h3>
+            <div class="flex items-baseline justify-between gap-x-4">
+              <h3 class="headline ink-sm min-w-0 flex-1 text-2xl md:text-3xl">{site.education.degree}</h3>
+              <p class="label shrink-0 text-right">{site.education.period}</p>
+            </div>
             <p class="text-fg-2 mt-1 font-medium">{site.education.school}, {site.education.city}</p>
             <dl class="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 text-[15px]">
               <div>
@@ -177,16 +181,12 @@ import {
                 <dd class="display mt-2 text-3xl">{site.education.gpa}</dd>
               </div>
               <div>
-                <dt class="label">Semester</dt>
-                <dd class="display mt-2 text-3xl">{site.education.semester}</dd>
+                <dt class="label">Languages</dt>
+                <dd class="text-fg-2 mt-3">{site.languages}</dd>
               </div>
               <div class="col-span-2">
                 <dt class="label">Recognition</dt>
                 {site.education.honors.map((h) => <dd class="text-fg-2 mt-1.5 leading-snug">{h}</dd>)}
-              </div>
-              <div class="col-span-2">
-                <dt class="label">Languages</dt>
-                <dd class="text-fg-2 mt-1.5">{site.languages}</dd>
               </div>
             </dl>
           </div>

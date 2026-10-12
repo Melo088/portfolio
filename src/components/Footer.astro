@@ -2,6 +2,7 @@
 import InkWord from './InkWord.astro';
 import { site } from '../data/site';
 import MagneticLink from '../react/MagneticLink';
+import EmailReveal from '../react/EmailReveal';
 
 const year = new Date().getFullYear();
 ---
@@ -13,10 +14,8 @@ const year = new Date().getFullYear();
     <p class="text-fg-2 mt-10 max-w-xl text-lg leading-relaxed">
       A platform to build, a pipeline to untangle or a question about one of these projects: write to me.
     </p>
-    <div class="mt-10 flex flex-wrap items-center gap-3">
-      <MagneticLink client:visible href={`mailto:${site.email}`} variant="solid">
-        {site.email}
-      </MagneticLink>
+    <div class="mt-10 flex flex-wrap items-start gap-3">
+      <EmailReveal client:visible />
       <MagneticLink client:visible href={site.github} external>
         GitHub
       </MagneticLink>

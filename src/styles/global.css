@@ -187,6 +187,9 @@ body {
   align-items: center;
   gap: 0.5em;
   border-radius: 9999px;
+  /* Transparent border so solid pills match the height of .pill-outline
+     (which carries a 1.5px border) when both sit in the same row. */
+  border: 1.5px solid transparent;
   background: var(--fg);
   color: var(--bg);
   padding: 0.35em 0.9em 0.38em;

@@ -2,6 +2,7 @@
 import InkWord from '../components/InkWord.astro';
 import Base from '../layouts/Base.astro';
 import MagneticLink from '../react/MagneticLink';
+import EmailReveal from '../react/EmailReveal';
 import BlurReveal from '../react/BlurReveal';
 import { site, experience, certifications } from '../data/site';
 ---
@@ -49,7 +50,7 @@ import { site, experience, certifications } from '../data/site';
           <div>
             <dt class="label">Contact</dt>
             <dd class="mt-3 space-y-1">
-              <a href={`mailto:${site.email}`} class="link-reveal block w-fit">{site.email}</a>
+              <EmailReveal client:visible variant="link" />
               <a href={site.github} target="_blank" rel="noopener noreferrer" class="link-reveal block w-fit">
                 github.com/{site.githubHandle}
               </a>
@@ -81,12 +82,12 @@ import { site, experience, certifications } from '../data/site';
         <ol>
           {
             experience.map((role) => (
-              <li class="border-rule grid gap-2 border-b py-6 sm:grid-cols-[10rem_1fr]">
-                <p class="mono text-fg-3 pt-1 text-[11px]">{role.period}</p>
-                <div>
+              <li class="border-rule flex items-baseline justify-between gap-x-6 border-b py-6">
+                <div class="min-w-0">
                   <p class="font-semibold tracking-tight">{role.title}</p>
                   <p class="text-fg-2 text-sm">{role.org}</p>
                 </div>
+                <p class="mono text-fg-3 shrink-0 text-[11px]">{role.period}</p>
               </li>
             ))
           }
