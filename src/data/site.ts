@@ -2,9 +2,9 @@
  * Única fuente de datos del sitio. Todo el contenido visible vive aquí:
  * las páginas y componentes solo leen de este archivo.
  *
- * Contenido actualizado el 2026-09-27 desde el CV 2026F
- * (~/Documents/cv/JuanCamiloMelo-CV-2026F) y los repos/organizaciones de
- * GitHub del semestre 2026-2.
+ * Contenido actualizado el 2026-10-12 desde ~/Documents/cv/JuanCamiloMelo-CV
+ * (fechas de proyectos contrastadas contra el historial de cada repo) y los
+ * repos/organizaciones de GitHub del semestre 2026-2.
  *
  * Regla de estilo del copy: inglés, sin em dashes (usar punto, coma o dos
  * puntos en su lugar).
@@ -23,7 +23,7 @@ export interface Project {
   stack: string[];
   /** Personal, curso o equipo: de dónde sale el proyecto. */
   context: string;
-  /** Fecha corta, formato "Mon YYYY". */
+  /** Fecha corta: "Mon YYYY" o rango "Mon to Mon YYYY". */
   date: string;
   repo?: string;
   /** Etiqueta del enlace al repo cuando no es un repo único (p. ej. una org). */
@@ -64,7 +64,11 @@ export const site = {
   role: 'Cloud & DevOps Engineering',
   lede: 'I design and automate infrastructure end to end: CI/CD pipelines, GitOps, infrastructure as code, containers and observability on AWS and GCP.',
   bio: 'Telematics Engineering student at Universidad Icesi pursuing Cloud and DevOps engineering. Over a year of hands-on, project-based work designing and automating infrastructure: CI/CD pipelines, GitOps workflows, infrastructure as code, container orchestration and observability across AWS and GCP, on top of a foundation in networking, systems, software and security.',
-  email: 'jcml29310@gmail.com',
+  /**
+   * Correo en base64: nunca viaja en texto plano en el HTML (anti-scraping).
+   * Lo ensambla EmailReveal al interactuar.
+   */
+  emailB64: 'amNtbDI5MzEwQGdtYWlsLmNvbQ==',
   github: 'https://github.com/Melo088',
   githubHandle: 'Melo088',
   linkedin: 'https://linkedin.com/in/juan-camilo-melo',
@@ -85,10 +89,10 @@ export const site = {
     school: 'Universidad Icesi',
     city: 'Cali, Colombia',
     degree: 'B.Eng. in Telematics Engineering',
-    period: 'Feb 2023 to Feb 2028',
+    /** Solo la graduación esperada: sin fecha de inicio ni semestre en curso. */
+    period: 'Expected Feb 2028',
     graduation: '2028',
     gpa: '4.7/5.0',
-    semester: '8th of 10',
     honors: [
       'Honor Scholarship (Beca de Honor): 2023-2, 2024-2 and 2025-2',
       'Honor Roll every semester to date',
@@ -104,7 +108,6 @@ export const facts = [
   { value: '4.7', label: 'GPA out of 5.0' },
   { value: '3×', label: 'Honor Scholarship' },
   { value: '6', label: 'Certifications' },
-  { value: '8/10', label: 'Semesters' },
 ];
 
 /** Lo que está en marcha ahora (2026-2). */
@@ -154,7 +157,7 @@ export const experience: Role[] = [
   {
     title: 'Satellite Networks Researcher',
     org: 'Celsia research group',
-    period: '2024 to 2025',
+    period: 'Feb 2024 to Feb 2025',
     points: [
       'Research on the evolution and economics of modern satellite networks, focused on LEO constellations such as Starlink.',
     ],
@@ -260,7 +263,7 @@ export const projects: Project[] = [
     ],
     stack: ['Terraform', 'AWS EKS', 'Argo CD', 'Kustomize', 'GitHub Actions', 'SonarQube', 'Trivy', 'Playwright', 'External Secrets', 'Go', 'Spring Boot', 'Node.js', 'Python', 'Vue', 'Redis', 'CloudWatch'],
     context: 'Team project · Infrastructure Automation',
-    date: 'Sep 2026',
+    date: 'Aug to Sep 2026',
     repo: 'https://github.com/sintratel-docket-platform/docket-architecture',
     repoLabel: 'Architecture repo',
   },
@@ -283,7 +286,7 @@ export const projects: Project[] = [
     ],
     stack: ['Java 21', 'Spring Boot', 'Spring Security', 'React 18', 'PostgreSQL', 'CloudFormation', 'EC2 ASG', 'RDS', 'ALB', 'CloudFront', 'S3', 'CloudWatch', 'MercadoPago'],
     context: 'Course project · Infrastructure III',
-    date: 'May 2026',
+    date: 'Apr to May 2026',
     repo: 'https://github.com/Melo088/ecommerce-iac-aws',
   },
   {
@@ -305,7 +308,7 @@ export const projects: Project[] = [
     ],
     stack: ['Python', 'AWS Lambda', 'API Gateway WebSocket', 'Cognito', 'RDS', 'DynamoDB', 'SNS', 'Terraform', 'Flutter'],
     context: 'Course project · Mobile Applications',
-    date: 'Apr 2026',
+    date: 'Mar to May 2026',
     repo: 'https://github.com/Melo088/icesi_score',
   },
   {
@@ -347,7 +350,7 @@ export const projects: Project[] = [
     ],
     stack: ['React', 'Vite', 'GitHub Actions', 'Terraform', 'AWS S3', 'CloudFront'],
     context: 'Course project · Infrastructure III',
-    date: 'Apr 2026',
+    date: 'May 2026',
     repo: 'https://github.com/Melo088/github-actions-showcase',
   },
   {
@@ -368,7 +371,7 @@ export const projects: Project[] = [
     ],
     stack: ['MikroTik', 'Cisco', 'Huawei GPON', 'Ubuntu Server', 'BIND9', 'Kea DHCP', 'Caddy', 'LibreQoS', 'Prometheus', 'Grafana', 'LibreNMS'],
     context: 'Course project · Infrastructure II & Platforms I',
-    date: 'Nov 2025',
+    date: 'Oct to Nov 2025',
     repo: 'https://github.com/Melo088/ISP-Project',
   },
 ];
