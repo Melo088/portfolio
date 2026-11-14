@@ -83,6 +83,14 @@ const ogImage = new URL('/og.jpg', Astro.site);
           <feMerge><feMergeNode in="halo"></feMergeNode><feMergeNode in="spray"></feMergeNode><feMergeNode in="body"></feMergeNode></feMerge>
         </filter>
 
+        <!-- Soaked edge for the ink pills (.pill / .pill-outline): warp the
+             outline a little, soften it, re-harden it. -->
+        <filter id="ink-soak" x="-20%" y="-50%" width="140%" height="200%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="2" seed="5" result="n"></feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="1.2" xChannelSelector="R" yChannelSelector="G" result="w"></feDisplacementMap>
+          <feGaussianBlur in="w" stdDeviation="0.55" result="s"></feGaussianBlur>
+          <feComponentTransfer in="s"><feFuncA type="linear" slope="1.6" intercept="-0.1"></feFuncA></feComponentTransfer>
+        </filter>
       </defs>
     </svg>
 

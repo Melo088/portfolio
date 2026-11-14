@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '../../components/Eyebrow.astro';
 import Base from '../../layouts/Base.astro';
 import MagneticLink from '../../react/MagneticLink';
 import BlurReveal from '../../react/BlurReveal';
@@ -23,7 +24,7 @@ const number = String(index + 1).padStart(2, '0');
     <a href="/#work" class="label link-reveal">← All work</a>
 
     <header class="border-rule mt-12 border-b pb-12">
-      <p class="label">({number}) {project.context} · {project.date}</p>
+      <Eyebrow text={`${project.context} · ${project.date}`} />
       <h1 class="headline ink-md mt-6 max-w-5xl text-[clamp(2.6rem,6.2vw,5.6rem)]">
         <BlurReveal client:load text={project.title} step={30} />
       </h1>
@@ -73,11 +74,18 @@ const number = String(index + 1).padStart(2, '0');
             </ul>
           </div>
           {
-            project.repo && (
-              <div class="pt-8">
-                <MagneticLink client:visible href={project.repo} variant="solid" external>
-                  {project.repoLabel ?? 'View repository'} ↗
-                </MagneticLink>
+            (project.repo || project.live) && (
+              <div class="flex flex-wrap gap-3 pt-8">
+                {project.repo && (
+                  <MagneticLink client:visible href={project.repo} variant="solid" external>
+                    {project.repoLabel ?? 'View repository'} ↗
+                  </MagneticLink>
+                )}
+                {project.live && (
+                  <MagneticLink client:visible href={project.live} external>
+                    {project.liveLabel ?? 'Live site'} ↗
+                  </MagneticLink>
+                )}
               </div>
             )
           }

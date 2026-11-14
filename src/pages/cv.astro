@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '../components/Eyebrow.astro';
 import InkWord from '../components/InkWord.astro';
 import Base from '../layouts/Base.astro';
 import MagneticLink from '../react/MagneticLink';
@@ -9,7 +10,7 @@ import { site } from '../data/site';
   <section class="mx-auto max-w-6xl px-5 pb-24 pt-32 md:px-8 md:pt-40">
     <div class="border-rule flex flex-wrap items-end justify-between gap-6 border-b pb-6">
       <div>
-        <p class="label">(CV) Curriculum vitae · 2026</p>
+        <Eyebrow text="Curriculum vitae · 2026" />
         <InkWord as="h1" text="cv" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
       </div>
       <div class="pb-3">

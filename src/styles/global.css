@@ -1,6 +1,5 @@
 @import '@fontsource-variable/archivo/wdth.css';
 @import '@fontsource-variable/archivo/wdth-italic.css';
-@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 
 /*
@@ -52,7 +51,6 @@
   --color-ink: var(--ink);
 
   --font-sans: 'Archivo Variable', 'Helvetica Neue', Arial, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 html {
@@ -123,20 +121,62 @@ body {
   line-height: 0.92;
 }
 
+/* Small meta (dates, numbers, the hero clock): the grotesk with
+   tabular figures. No monospace anywhere. */
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-weight: 450;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.005em;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Section labels: small mono caps. */
+/* Labels (dates, field names): small lowercase grotesk, like notes. */
 .label {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-3);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-2);
+}
+
+/*
+ * Section eyebrows: the name on a small strip of ink tape, cut with torn
+ * ends and worn (public/textures/tape-mask.webp, see bake:textures). The
+ * tape is a ::before layer behind the letters, so they stay crisp.
+ */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: lowercase;
+  line-height: 1;
+}
+.eyebrow-t {
+  position: relative;
+  isolation: isolate;
+  padding: 0.24em 0.55em 0.3em;
+  color: var(--bg);
+  transform: rotate(-0.8deg);
+}
+.eyebrow-t::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--fg) 82%, transparent);
+  clip-path: polygon(
+    0% 14%, 5% 2%, 21% 8%, 37% 0%, 55% 7%, 72% 1%, 88% 8%, 100% 0%,
+    98% 38%, 100% 74%, 97% 100%, 80% 94%, 61% 100%, 44% 93%, 26% 100%, 9% 95%, 0% 100%, 2% 58%
+  );
+  -webkit-mask-image: url('/textures/tape-mask.webp');
+  mask-image: url('/textures/tape-mask.webp');
+  -webkit-mask-size: 160px 160px;
+  mask-size: 160px 160px;
 }
 
 /* The <svg> holding the ink filter definitions only has to exist. */
@@ -181,30 +221,77 @@ body {
     0 0 6px color-mix(in srgb, currentColor 22%, transparent);
 }
 
-/* Dark pill, like the kit's "+20" and "Free Download" chips. */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  border-radius: 9999px;
-  /* Transparent border so solid pills match the height of .pill-outline
-     (which carries a 1.5px border) when both sit in the same row. */
-  border: 1.5px solid transparent;
-  background: var(--fg);
-  color: var(--bg);
-  padding: 0.35em 0.9em 0.38em;
-  line-height: 1;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--fg) 35%, transparent);
-}
+/*
+ * Pills, like the kit's "Free Download" chip. The ink is a ::before layer
+ * behind the label: solid ink with uneven, tonal density (baked mottling,
+ * public/textures/ink-mottle-*.webp) and a soft soaked edge, so the text
+ * stays crisp. Pills sit above the page-wide print grain (z 60) so its
+ * specks don't read as dots on them.
+ */
+.pill,
 .pill-outline {
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
   border-radius: 9999px;
-  border: 1.5px solid var(--fg);
-  color: var(--fg);
+  /* Transparent border so both kinds share one height in a row. */
+  border: 1.5px solid transparent;
   padding: 0.35em 0.9em 0.38em;
   line-height: 1;
+}
+.pill::before,
+.pill-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: box-shadow 0.35s ease;
+}
+html:not(.no-svg-ink) .pill::before,
+html:not(.no-svg-ink) .pill-outline::before {
+  filter: url('#ink-soak');
+}
+
+.pill {
+  z-index: 61;
+  color: var(--bg);
+}
+.pill::before {
+  background-color: var(--fg);
+  background-image: url('/textures/ink-mottle-light.webp');
+  background-size: 180px 180px;
+  box-shadow:
+    0 0 1.5px var(--fg),
+    0 0 12px color-mix(in srgb, var(--fg) 40%, transparent);
+}
+.pill:hover::before {
+  box-shadow:
+    0 0 2px var(--fg),
+    0 0 22px color-mix(in srgb, var(--fg) 55%, transparent);
+}
+/* Pale ink on the carbon stock: the mottling darkens instead. */
+.surface-carbon .pill::before {
+  background-image: url('/textures/ink-mottle-dark.webp');
+  box-shadow:
+    0 0 1px var(--fg),
+    0 0 12px color-mix(in srgb, var(--fg) 22%, transparent);
+}
+.surface-carbon .pill:hover::before {
+  box-shadow:
+    0 0 1.5px var(--fg),
+    0 0 20px color-mix(in srgb, var(--fg) 35%, transparent);
+}
+
+.pill-outline {
+  color: var(--fg);
+}
+.pill-outline::before {
+  border: 1.75px solid var(--fg);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--fg) 25%, transparent);
 }
 
 .chip {
@@ -213,9 +300,11 @@ body {
   background: var(--chip);
   border: 1px solid var(--rule);
   padding: 0.3em 0.75em;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 550;
+  letter-spacing: -0.005em;
+  font-variant-numeric: tabular-nums;
   color: var(--fg-2);
   line-height: 1.2;
 }
