@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '../components/Eyebrow.astro';
 import InkWord from '../components/InkWord.astro';
 import Base from '../layouts/Base.astro';
 import ProjectRow from '../components/ProjectRow.astro';
@@ -55,7 +56,7 @@ import {
   <!-- 01 Profile -->
   <section class="px-5 py-24 md:px-8 md:py-36">
     <div class="mx-auto grid max-w-6xl gap-8 md:grid-cols-12">
-      <p class="label md:col-span-3">(01) Profile</p>
+      <Eyebrow text="Profile" class="md:col-span-3" />
       <div class="md:col-span-9">
         <p class="headline ink-md text-[clamp(2rem,4.4vw,4rem)]">
           <BlurReveal client:visible text={site.lede} step={28} />
@@ -79,7 +80,7 @@ import {
     <div class="mx-auto max-w-6xl">
       <div class="border-rule flex items-end justify-between gap-6 border-b pb-6">
         <div>
-          <p class="label">(02) Currently</p>
+          <Eyebrow text="Currently" />
           <InkWord text="now" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
         </div>
         <p class="label pb-3 text-right">Updated<br />{nowUpdated}</p>
@@ -119,10 +120,10 @@ import {
     <div class="mx-auto max-w-6xl">
       <div class="border-rule flex items-end justify-between gap-6 border-b pb-6">
         <div>
-          <p class="label">(03) Selected work</p>
+          <Eyebrow text="Selected work" />
           <InkWord text="work" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
         </div>
-        <p class="label pb-3 text-right">{projects.length} projects<br />2025 to 2026</p>
+        <p class="label pb-3 text-right">{projects.length} projects<br />Apr to Nov 2026</p>
       </div>
       <ol>
         {projects.map((project, i) => <ProjectRow project={project} index={i} />)}
@@ -139,7 +140,7 @@ import {
   <section id="record" class="px-5 py-24 md:px-8 md:py-36">
     <div class="mx-auto max-w-6xl">
       <div class="border-rule border-b pb-6">
-        <p class="label">(04) Experience & education</p>
+        <Eyebrow text="Experience & education" />
         <InkWord text="record" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
       </div>
 
@@ -202,7 +203,7 @@ import {
   <section id="stack" class="px-5 pb-24 md:px-8 md:pb-36">
     <div class="mx-auto max-w-6xl">
       <div class="border-rule border-b pb-6">
-        <p class="label">(05) Tools & certifications</p>
+        <Eyebrow text="Tools & certifications" />
         <InkWord text="stack" class="mt-4 text-[clamp(4.5rem,13vw,11rem)]" />
       </div>
       <div class="grid gap-x-16 md:grid-cols-12">
